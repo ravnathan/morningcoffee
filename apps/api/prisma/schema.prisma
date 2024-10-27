@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  cashier
+  admin
+}
+
+enum PaymentMethod {
+  cash
+  debit
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  fullname   String
+  password   String
+  role       Role
+  avatar     String?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Category {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  image      String?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  Product    Product[]
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  category_id     Int
+  price           Int
+  image           String?
+  stock           Int
+  description     String            @db.Text
+  created_at      DateTime          @default(now())
+  uodated_at      DateTime          @default(now())
+  category        Category          @relation(fields: [category_id], references: [id])
+  TransactionItem TransactionItem[]
+}
+
+model Transaction {
+  id               Int               @id @default(autoincrement())
+  total_price      Float
+  transaction_date DateTime
+  updated_at       DateTime
+  TransactionItem  TransactionItem[]
+}
+
+model TransactionItem {
+  id             Int         @id @default(autoincrement())
+  transaction_id Int
+  product_id     Int
+  qty            Int
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+  product        Product     @relation(fields: [product_id], references: [id])
+}
