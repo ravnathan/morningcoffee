@@ -31,27 +31,30 @@ export default function ImageSlider() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); 
+    }, 5000);
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="absolute inset-0 w-full h-screen overflow-hidden">
-      {images.map((image, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img
-            src={image}
-            alt={`Slide ${index + 1}`}
-            className="object-cover w-full h-full"
-          />
-        </div>
-      ))}
+    <div>
+      <div className="absolute inset-0 w-full h-screen overflow-hidden">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img
+              src={image}
+              alt={`Slide ${index + 1}`}
+              className="object-cover w-full h-full"
+            />
+          </div>
+        ))}
+      </div>
+      <div className='absolute z-10 bg-black w-full h-screen overflow-hidden opacity-60'></div>
     </div>
   );
 }

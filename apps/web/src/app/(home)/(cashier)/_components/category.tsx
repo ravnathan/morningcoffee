@@ -1,28 +1,40 @@
+'use client'
+
+import { useEffect, useState } from "react"
 import CategoryTemplate from "./categorytemplate"
+import { CategoryInterface } from "@/types/home"
+import { getCategories } from "@/libs/action/home"
 
 export default function Category() {
+    const [data, setData] = useState<any>(null);
 
-    const categoryMenus = [
-        {category_url: '/images/all.png', category_name: 'All'},
-        {category_url: '/images/coffee.png', category_name: 'Coffee'},
-        {category_url: '/images/juice.png', category_name: 'Juice'},
-        {category_url: '/images/milk.png', category_name: 'Milk Based'},
-        {category_url: '/images/dessert.webp', category_name: 'Dessert'},
-        {category_url: '/images/snacks.png', category_name: 'Snacks'},
-        {category_url: '/images/meals.jpg', category_name: 'Meals'},
+    const fetchData = async() => {
+        try {
+            const dat = await getCategories();
+            setData(dat);
+        } catch (error) {
+            console.log(error);   
+        }
+    };
 
-    ]
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log(data);
+
     return (
         <div>
             <div className="flex items-center justify-evenly pt-10 flex-wrap">
-                {categoryMenus.map((cat, key) => (
+                {data?.categories?.map((cat: any, key: number) => (
                     <div key={key}>
                         <CategoryTemplate
-                        category_name={cat.category_name}
-                        category_url={cat.category_url}/>
+                            category_name={cat.name}
+                            category_url={cat.image}
+                        />
                     </div>
                 ))}
             </div>
         </div>
-    )
+    );
 }

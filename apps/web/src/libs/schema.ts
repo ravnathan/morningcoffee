@@ -12,3 +12,8 @@ export const loginSchema = Yup.object({
         'Password must include at least one special character from !@#$%^&*',
       ).required('Password is required'),
   });
+
+export const createProduct = Yup.object({
+  name: Yup.string().required('Name is required'),
+  
+})

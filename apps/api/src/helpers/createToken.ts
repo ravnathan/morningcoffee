@@ -1,7 +1,7 @@
 import { sign } from 'jsonwebtoken';
 
 export interface Ipayload {
-  id: number;
+  id: string;
   role: string;
 }
 

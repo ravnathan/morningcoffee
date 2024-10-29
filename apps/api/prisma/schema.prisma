@@ -20,52 +20,74 @@ enum PaymentMethod {
   debit
 }
 
+enum Size {
+  small
+  medium
+  large
+}
+
+enum Type {
+  hot
+  cold
+}
+
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  fullname   String
-  password   String
-  role       Role
-  avatar     String?
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  id          String        @id @default(cuid())
+  username    String        @unique
+  fullname    String
+  password    String
+  role        Role
+  avatar      String?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  Transaction Transaction[]
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name       String    @unique
   image      String?
+  isDeleted  Boolean   @default(false)
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
   Product    Product[]
 }
 
 model Product {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique
-  category_id     Int
-  price           Int
-  image           String?
-  stock           Int
-  description     String            @db.Text
+  id            String  @id @default(cuid())
+  name          String  @unique
+  category_name String
+  size          Size    @default(medium)
+  type          Type?
+  price_S       Int?
+  price_M       Int
+  price_L       Int?
+  image_cold    String?
+  image_hot     String?
+  stock         Int
+  description   String  @db.Text
+  isDeleted     Boolean @default(false)
+
   created_at      DateTime          @default(now())
   uodated_at      DateTime          @default(now())
-  category        Category          @relation(fields: [category_id], references: [id])
+  category        Category          @relation(fields: [category_name], references: [name])
   TransactionItem TransactionItem[]
 }
 
 model Transaction {
-  id               Int               @id @default(autoincrement())
+  id               String            @id @default(cuid())
   total_price      Float
-  transaction_date DateTime
-  updated_at       DateTime
+  cashier_on_duty  String
+  transaction_date DateTime          @default(now())
+  updated_at       DateTime          @default(now())
   TransactionItem  TransactionItem[]
+  user             User              @relation(fields: [cashier_on_duty], references: [id])
 }
 
 model TransactionItem {
-  id             Int         @id @default(autoincrement())
-  transaction_id Int
-  product_id     Int
+  id             String      @id @default(cuid())
+  transaction_id String
+  product_id     String
   qty            Int
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
   product        Product     @relation(fields: [product_id], references: [id])

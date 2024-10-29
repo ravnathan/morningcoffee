@@ -21,7 +21,6 @@ export default function CategoryTemplate({ category_url, category_name }: Catego
         }}
         className="relative w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-main flex flex-col justify-end"
       >
-        {/* Image */}
         <Image
           src={category_url}
           alt="Category image"
@@ -29,8 +28,6 @@ export default function CategoryTemplate({ category_url, category_name }: Catego
           style={{ objectFit: 'cover' }}
           className="transition-transform duration-300 hover:scale-110 bg-white"
         />
-        
-        {/* Text Overlay */}
         <div className="absolute bottom-0 w-full bg-white bg-opacity-80 text-center py-1">
           <p className="text-sm font-semibold text-gray-800">{category_name}</p>
         </div>

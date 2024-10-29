@@ -1,7 +1,7 @@
 import { responseError } from '@/helpers/responseError';
 import { User } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { decode, verify } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 
 export class AuthMiddleware {
   verifyToken(req: Request, res: Response, next: NextFunction) {
@@ -19,22 +19,14 @@ export class AuthMiddleware {
     }
   }
 
-  checkAdmin(role: 'admin') {
-    return (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const token = req.headers.authorization?.replace(`Bearer `, '');
+  checkAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (req.user.role !== 'admin') throw 'You are not an admin'
 
-        if (!token) throw 'Verification Failed';
-
-        const decoded = decode(token);
-        if (typeof decoded !== 'string' && decoded && decoded.role === role) {
-          next();
-        } else {
-          throw 'You are not an admin';
-        }
-      } catch (error) {
-        responseError(res, error);
-      }
-    };
+      next()
+    } catch (error) {
+      responseError(res, error)
+    }
   }
+  
 }

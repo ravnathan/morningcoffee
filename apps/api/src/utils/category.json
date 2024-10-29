@@ -1,0 +1,30 @@
+[
+  {
+    "name": "All",
+    "image": "http://localhost:8000/api/public/categories/all.png"
+  },
+  {
+    "name": "Coffee",
+    "image": "http://localhost:8000/api/public/categories/coffee.png"
+  },
+  {
+    "name": "Dessert",
+    "image": "http://localhost:8000/api/public/categories/dessert.webp"
+  },
+  {
+    "name": "Juice",
+    "image": "http://localhost:8000/api/public/categories/juice.png"
+  },
+  {
+    "name": "Meals",
+    "image": "http://localhost:8000/api/public/categories/meals.jpg"
+  },
+  {
+    "name": "Milk",
+    "image": "http://localhost:8000/api/public/categories/milk.png"
+  },
+  {
+    "name": "Snacks",
+    "image": "http://localhost:8000/api/public/categories/snacks.png"
+  }
+]

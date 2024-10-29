@@ -17,7 +17,6 @@ export default function CoffeeTemplate() {
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       <div className="flex flex-col space-y-8 px-8">
-        {/* Image and Description */}
         <motion.div
           className="flex gap-5 items-center pt-4"
           initial={{ opacity: 0, x: -50 }}
@@ -25,7 +24,7 @@ export default function CoffeeTemplate() {
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           <Image
-            src={'/images/coffee.png'}
+            src={'/images/category/coffee.png'}
             width={150}
             height={100}
             style={{ objectFit: 'cover' }}
@@ -39,10 +38,7 @@ export default function CoffeeTemplate() {
             <h3 className="font-semibold text-lg">Rp. 17.000</h3>
           </div>
         </motion.div>
-
-        {/* Type and Size Selection */}
         <div className="flex justify-between">
-          {/* Type */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,8 +60,6 @@ export default function CoffeeTemplate() {
               </button>
             </div>
           </motion.div>
-
-          {/* Size */}
           <motion.div
             className="font-semibold"
             initial={{ opacity: 0, y: 20 }}
@@ -86,8 +80,6 @@ export default function CoffeeTemplate() {
             </div>
           </motion.div>
         </div>
-
-        {/* Add to Order Button */}
         <motion.button
           className="w-full bg-coffee text-white text-lg py-3 rounded-lg font-semibold"
           initial={{ opacity: 0, y: 20 }}
