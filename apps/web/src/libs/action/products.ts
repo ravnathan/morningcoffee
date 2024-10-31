@@ -1,7 +1,6 @@
 import { ProductData } from '@/types/product';
 import Cookies from 'js-cookie';
 
-// Converts dataURL to a File
 function dataURLtoFile(dataUrl: string, fileName: string): File {
   const [header, base64Data] = dataUrl.split(',');
   const mimeType = header.match(/:(.*?);/)![1];
@@ -27,7 +26,6 @@ export function prepareImageHot(imageHot: string | File): File {
     
 }
 
-// Main function for creating product
 export const createProduct = async (data: ProductData) => {
   const token = Cookies.get('token');
   const formData = new FormData();
@@ -57,3 +55,15 @@ export const createProduct = async (data: ProductData) => {
 
   return res.json();
 };
+
+export const getProduct = async () => {
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}product`, {
+    headers: {
+      'Content-Type' : 'application/json'
+    },
+    method: 'GET',
+  })
+
+  return res.json()
+}

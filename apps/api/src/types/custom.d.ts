@@ -1,16 +1,22 @@
+import { Request } from "express";
+import { File as MulterFile } from "multer"; 
+
 type User = {
-    id: string
-    role: string
+    id: string;
+    role: string;
 }
 
-declare namespace Express {
-    export interface Request {
-        user: User
-    }
+interface MulterFiles {
+    product?: MulterFile[];   
+    image_iced?: MulterFile[]; 
 }
 
-declare namespace Express {
-    export interface Request {
-        file?: Multer.File
+declare global {
+    namespace Express {
+        interface Request {
+            user: User;
+            file?: MulterFile; 
+            files?: MulterFiles;
+        }
     }
 }

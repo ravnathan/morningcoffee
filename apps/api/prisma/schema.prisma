@@ -31,42 +31,54 @@ enum Type {
   cold
 }
 
+enum Shift {
+  start
+  end
+}
+
 model User {
-  id          String        @id @default(cuid())
-  username    String        @unique
-  fullname    String
-  password    String
-  role        Role
-  avatar      String?
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @default(now())
-  Transaction Transaction[]
+  id           String         @id @default(cuid())
+  username     String         @unique
+  fullname     String
+  password     String
+  role         Role
+  avatar       String?
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @default(now())
+  Transaction  Transaction[]
+  CashierShift CashierShift[]
 }
 
 model Category {
-  id         String    @id @default(cuid())
-  name       String    @unique
-  image      String?
-  isDeleted  Boolean   @default(false)
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  Product    Product[]
+  id               String    @id @default(cuid())
+  name             String    @unique
+  image            String
+  hot_iced_variant Boolean   @default(false)
+  cold_only        Boolean   @default(false)
+  size_small       Boolean   @default(false)
+  size_medium      Boolean   @default(true)
+  size_large       Boolean   @default(false)
+  is_deleted       Boolean   @default(false)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now())
+  Product          Product[]
 }
 
 model Product {
-  id            String  @id @default(cuid())
-  name          String  @unique
-  category_name String
-  size          Size    @default(medium)
-  type          Type?
-  price_S       Int?
-  price_M       Int
-  price_L       Int?
-  image_cold    String?
-  image_hot     String?
-  stock         Int
-  description   String  @db.Text
-  isDeleted     Boolean @default(false)
+  id                String  @id @default(cuid())
+  name              String  @unique
+  category_name     String
+  price_medium      Int?
+  price_iced_small  Int?
+  price_iced_medium Int?
+  price_iced_large  Int?
+  image_iced        String?
+  image_hot         String
+  stock             Int
+  stock_iced        Int?
+  description       String  @db.Text
+  description_iced  String? @db.Text
+  is_deleted        Boolean @default(false)
 
   created_at      DateTime          @default(now())
   uodated_at      DateTime          @default(now())
@@ -89,6 +101,15 @@ model TransactionItem {
   transaction_id String
   product_id     String
   qty            Int
+  price          Float
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
   product        Product     @relation(fields: [product_id], references: [id])
+}
+
+model CashierShift {
+  id      String @id @default(cuid())
+  user_id String
+  shift   Shift
+  value   Float
+  user    User   @relation(fields: [user_id], references: [id])
 }

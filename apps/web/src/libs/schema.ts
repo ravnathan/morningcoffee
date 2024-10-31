@@ -17,3 +17,14 @@ export const createProduct = Yup.object({
   name: Yup.string().required('Name is required'),
   
 })
+
+const createCategorySchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Category Name is required'),
+  coldVariant: Yup.boolean(), 
+  selectedSize: Yup.string()
+    .oneOf(['Small', 'Medium', 'Large'], 'Invalid size selected')
+    .required('Size is required'),
+  image: Yup.mixed()
+    .required('Image is required'),
+});

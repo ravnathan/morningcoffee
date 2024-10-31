@@ -1,0 +1,72 @@
+[
+        {
+            "name": "Americano",
+            "category_name": "Coffee",
+            "price_medium": 15000,
+            "price_iced_small": 14000,
+            "price_iced_medium": 19000,
+            "price_iced_large": 25000,
+            "image_iced": "http://localhost:8000/api/public/products/product1730352973174.jpg",
+            "image_hot": "http://localhost:8000/api/public/products/product1730352973174.webp",
+            "stock": 52,
+            "stock_iced": 45,
+            "description": "Hot brewed americano beans",
+            "description_iced": "Cold brewed coffee"
+        },
+        {
+            "name": "Espresso",
+            "category_name": "Coffee",
+            "price_medium": 17000,
+            "price_iced_small": 16000,
+            "price_iced_medium": 21000,
+            "price_iced_large": 27000,
+            "image_iced": "http://localhost:8000/api/public/products/product1730353531333.png",
+            "image_hot": "http://localhost:8000/api/public/products/product1730353531333.jpg",
+            "stock": 52,
+            "stock_iced": 45,
+            "description": "Bold, concentrated coffee brewed under pressure.",
+            "description_iced": "Chilled espresso served over ice, refreshing and bold."
+        },
+        {
+            "name": "Cheese Quesadila",
+            "category_name": "Snacks",
+            "price_medium": 28000,
+            "price_iced_small": null,
+            "price_iced_medium": null,
+            "price_iced_large": null,
+            "image_iced": null,
+            "image_hot": "http://localhost:8000/api/public/products/product1730353964520.webp",
+            "stock": 14,
+            "stock_iced": null,
+            "description": "Grilled chicken and cheese melted in a tortilla.",
+            "description_iced": null
+        },
+        {
+            "name": "Chicken Parmesan",
+            "category_name": "Meals",
+            "price_medium": 38000,
+            "price_iced_small": null,
+            "price_iced_medium": null,
+            "price_iced_large": null,
+            "image_iced": null,
+            "image_hot": "http://localhost:8000/api/public/products/product1730355765291.jpg",
+            "stock": 14,
+            "stock_iced": null,
+            "description": "Grilled chicken and cheese melted in a tortilla.",
+            "description_iced": null
+        },
+        {
+            "name": "Caramel Macchiato",
+            "category_name": "Coffee",
+            "price_medium": 18000,
+            "price_iced_small": 21000,
+            "price_iced_medium": 31000,
+            "price_iced_large": 42000,
+            "image_iced": "http://localhost:8000/api/public/products/product1730356214682.jpg",
+            "image_hot": "http://localhost:8000/api/public/products/product1730356214678.webp",
+            "stock": 21,
+            "stock_iced": 45,
+            "description": "Sweet espresso layered with steamed milk and caramel.",
+            "description_iced": "Chilled espresso with milk, vanilla syrup, and caramel drizzle."
+        }
+]

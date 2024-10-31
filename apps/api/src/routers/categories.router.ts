@@ -1,4 +1,5 @@
 import { CategoryController } from "@/controllers/category.controller";
+import { uploader } from "@/helpers/uploader";
 import { AuthMiddleware } from "@/middleware/auth.middleware";
 import { Router } from "express";
 
@@ -16,7 +17,7 @@ export class CategoryRouter {
 
     private initialization(): void {
         this.router.get('/', this.categoryController.getCategories)
-        // this.router.post('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.categoryController.createCategory)
+        this.router.post('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, uploader('category', '/categories').single('category'), this.categoryController.createCategory)
         this.router.patch('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.categoryController.editCategory)
         this.router.patch('/soft', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.categoryController.deleteCategory)
     }

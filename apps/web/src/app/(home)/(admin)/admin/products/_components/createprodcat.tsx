@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Modal from '../../_components/modal';
 import CreateProduct from './productform';
-
+import ProductModal from './productmodal';
+import CategoryModal from './categorymodal';
+import CreateCategory from './categoryform';
 
 export default function CreateProductCat() {
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -29,11 +30,16 @@ export default function CreateProductCat() {
         </button>
       </div>
       {productModalOpen && (
-        <Modal closeModal={() => setProductModalOpen(false)} children={<CreateProduct/>}/>
+        <ProductModal
+          closeModal={() => setProductModalOpen(false)}
+          children={<CreateProduct />}
+        />
       )}
-      {/* {categoryModalOpen && (
-        <Modal closeModal={() => setCategoryModalOpen(false)} />
-      )} */}
+      {categoryModalOpen && (
+        <CategoryModal
+        closeModal={() => setCategoryModalOpen(false)}
+        children={<CreateCategory/>}/>
+      )}
     </div>
   );
 }

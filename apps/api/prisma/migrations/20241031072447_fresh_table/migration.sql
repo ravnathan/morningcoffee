@@ -17,8 +17,13 @@ CREATE TABLE `User` (
 CREATE TABLE `Category` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `image` VARCHAR(191) NULL,
-    `isDeleted` BOOLEAN NOT NULL DEFAULT false,
+    `image` VARCHAR(191) NOT NULL,
+    `hot_iced_variant` BOOLEAN NOT NULL DEFAULT false,
+    `cold_only` BOOLEAN NOT NULL DEFAULT false,
+    `size_small` BOOLEAN NOT NULL DEFAULT false,
+    `size_medium` BOOLEAN NOT NULL DEFAULT true,
+    `size_large` BOOLEAN NOT NULL DEFAULT false,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -31,16 +36,17 @@ CREATE TABLE `Product` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `category_name` VARCHAR(191) NOT NULL,
-    `size` ENUM('small', 'medium', 'large') NOT NULL DEFAULT 'medium',
-    `type` ENUM('hot', 'cold') NULL,
-    `price_S` INTEGER NULL,
-    `price_M` INTEGER NOT NULL,
-    `price_L` INTEGER NULL,
-    `image_cold` VARCHAR(191) NULL,
-    `image_hot` VARCHAR(191) NULL,
+    `price_medium` INTEGER NULL,
+    `price_iced_small` INTEGER NULL,
+    `price_iced_medium` INTEGER NULL,
+    `price_iced_large` INTEGER NULL,
+    `image_iced` VARCHAR(191) NULL,
+    `image_hot` VARCHAR(191) NOT NULL,
     `stock` INTEGER NOT NULL,
+    `stock_iced` INTEGER NULL,
     `description` TEXT NOT NULL,
-    `isDeleted` BOOLEAN NOT NULL DEFAULT false,
+    `description_iced` TEXT NULL,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `uodated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -65,6 +71,17 @@ CREATE TABLE `TransactionItem` (
     `transaction_id` VARCHAR(191) NOT NULL,
     `product_id` VARCHAR(191) NOT NULL,
     `qty` INTEGER NOT NULL,
+    `price` DOUBLE NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `CashierShift` (
+    `id` VARCHAR(191) NOT NULL,
+    `user_id` VARCHAR(191) NOT NULL,
+    `shift` ENUM('start', 'end') NOT NULL,
+    `value` DOUBLE NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -80,3 +97,6 @@ ALTER TABLE `TransactionItem` ADD CONSTRAINT `TransactionItem_transaction_id_fke
 
 -- AddForeignKey
 ALTER TABLE `TransactionItem` ADD CONSTRAINT `TransactionItem_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CashierShift` ADD CONSTRAINT `CashierShift_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

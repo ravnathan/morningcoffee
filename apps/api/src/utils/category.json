@@ -1,30 +1,35 @@
 [
   {
-    "name": "All",
-    "image": "http://localhost:8000/api/public/categories/all.png"
-  },
-  {
     "name": "Coffee",
-    "image": "http://localhost:8000/api/public/categories/coffee.png"
+    "image": "http://localhost:8000/api/public/categories/category1730275469575.png",
+    "hot_iced_variant": true,
+    "size_small": true,
+    "size_large": true
   },
   {
     "name": "Dessert",
-    "image": "http://localhost:8000/api/public/categories/dessert.webp"
+    "image": "http://localhost:8000/api/public/categories/category1730275533368.webp"
   },
   {
     "name": "Juice",
-    "image": "http://localhost:8000/api/public/categories/juice.png"
+    "image": "http://localhost:8000/api/public/categories/category1730275582976.png",
+    "cold_only": true,
+    "size_small": true,
+    "size_large": true
   },
   {
     "name": "Meals",
-    "image": "http://localhost:8000/api/public/categories/meals.jpg"
+    "image": "http://localhost:8000/api/public/categories/category1730275603587.jpg"
   },
   {
     "name": "Milk",
-    "image": "http://localhost:8000/api/public/categories/milk.png"
+    "image": "http://localhost:8000/api/public/categories/category1730275629338.png",
+    "hot_iced_variant": true,
+    "size_small": true,
+    "size_large": true
   },
   {
     "name": "Snacks",
-    "image": "http://localhost:8000/api/public/categories/snacks.png"
+    "image": "http://localhost:8000/api/public/categories/category1730275655375.png"
   }
 ]

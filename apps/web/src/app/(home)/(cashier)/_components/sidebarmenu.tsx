@@ -18,7 +18,7 @@ export default function SideBarMenu() {
       initial={{ x: -250, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="h-full w-64 bg-white shadow-lg fixed top-0 left-0 flex flex-col p-6"
+      className="h-full w-52 bg-white shadow-lg fixed top-0 left-0 flex flex-col p-6"
     >
       <div className="flex items-center justify-center py-6">
         <Image

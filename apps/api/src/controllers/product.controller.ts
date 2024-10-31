@@ -2,17 +2,23 @@ import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
 import { Request, Response } from 'express';
 
-const base_url = process.env.BASE_URL
+const base_url = process.env.BASE_URL;
 
 export class ProductController {
   async getAllProducts(req: Request, res: Response) {
     try {
       const products = await prisma.product.findMany({
-        where: { isDeleted: false },
+        where: { is_deleted: false },
+        include: {
+          category: {
+            select: {
+              hot_iced_variant: true,
+            },
+          },
+        },
       });
 
       return res.status(200).send({
-        status: 'ok',
         products,
       });
     } catch (error) {
@@ -22,37 +28,54 @@ export class ProductController {
 
   async createProduct(req: Request, res: Response) {
     try {
-      const { category_name, ...productData } = req.body; 
+      const { category_name, ...productData } = req.body;
+
       const categoryExists = await prisma.category.findUnique({
         where: { name: category_name },
       });
-  
-      if (!categoryExists) throw 'Category does not exist';
+
+      if (!categoryExists) throw new Error('Category does not exist');
 
       const productExists = await prisma.product.findUnique({
         where: { name: productData.name },
       });
-  
-      if (productExists) throw 'The product already exists';
 
-      const image_hot = `${base_url}/public/products/${req.file?.filename}`;
-      const image_cold = req.body.image_cold ? `${base_url}/public/products/${req.body.image_cold}` : null;
-      const price_S = parseInt(productData.price_S)
-      const price_L = parseInt(productData.price_L)
-  
+      if (productExists) throw new Error('The product already exists');
+
+      const files = req.files as {
+        product?: Express.Multer.File[];
+        image_iced?: Express.Multer.File[];
+      };
+
+      const image_hot =
+        files.product && files.product.length > 0
+          ? `${base_url}/public/products/${files.product[0].filename}`
+          : null;
+
+      const image_iced =
+        files.image_iced && files.image_iced.length > 0
+          ? `${base_url}/public/products/${files.image_iced[0].filename}`
+          : null;
+
+      const price_iced_small = parseInt(productData.price_iced_small);
+      const price_iced_medium = parseInt(productData.price_iced_medium);
+      const price_iced_large = parseInt(productData.price_iced_large);
+
       const product = await prisma.product.create({
         data: {
           ...productData,
-          category_name, 
+          category_name,
           image_hot,
-          price_M: parseInt(productData.price_M),
-          ...(image_cold && { image_cold }), 
-          ...(price_S && {price_S}),
-          ...(price_L && {price_L}),
-          stock: parseInt(productData.stock)
+          price_medium: parseInt(productData.price_medium),
+          ...(image_iced && { image_iced }),
+          ...(price_iced_small && { price_iced_small }),
+          ...(price_iced_medium && { price_iced_medium }),
+          ...(price_iced_large && { price_iced_large }),
+          stock: parseInt(productData.stock),
+          stock_iced: parseInt(productData.stock_iced),
         },
       });
-  
+
       return res.status(200).send({
         status: 'ok',
         msg: 'Product created',
@@ -93,11 +116,11 @@ export class ProductController {
       });
 
       if (!product) throw "Product doesn't exist";
-      if (product.isDeleted == true) throw 'Product was already deleted';
+      if (product.is_deleted == true) throw 'Product was already deleted';
 
       await prisma.product.update({
         where: { id: product.id },
-        data: { isDeleted: true },
+        data: { is_deleted: true },
       });
 
       return res.status(200).send({

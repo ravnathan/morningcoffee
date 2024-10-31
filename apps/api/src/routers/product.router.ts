@@ -16,8 +16,8 @@ export class ProductRouter {
     }
 
     private initialization(): void {
-        this.router.get('/', this.authMiddleware.verifyToken, this.productController.getAllProducts)
-        this.router.post('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, uploader('product', '/products').single('product'), this.productController.createProduct)
+        this.router.get('/', this.productController.getAllProducts)
+        this.router.post('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin,  uploader('product', '/products').fields([{ name: 'product', maxCount: 1 },{ name: 'image_iced', maxCount: 1 }]), this.productController.createProduct)
         this.router.patch('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, uploader('product', '/products').single('product'), this.productController.editProduct)
         this.router.patch('/soft', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.productController.deleteProduct)
     }
