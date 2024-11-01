@@ -1,4 +1,5 @@
 import { AdminController } from "@/controllers/admin.controller";
+import { uploader } from "@/helpers/uploader";
 import { AuthMiddleware } from "@/middleware/auth.middleware";
 import { Router } from "express";
 
@@ -16,7 +17,7 @@ export class AdminRouter {
 
     private initialization(): void {
         this.router.get('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.getAllCashier)
-        this.router.post('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.createCashier)
+        this.router.post('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, uploader('avatar', '/avatar').single('avatar'), this.adminController.createCashier)
         this.router.patch('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.editCashier)
         this.router.delete('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.deleteCashier)
     }

@@ -18,7 +18,7 @@ export const createProduct = Yup.object({
   
 })
 
-const createCategorySchema = Yup.object().shape({
+export const createCategorySchema = Yup.object().shape({
   name: Yup.string()
     .required('Category Name is required'),
   coldVariant: Yup.boolean(), 
@@ -28,3 +28,18 @@ const createCategorySchema = Yup.object().shape({
   image: Yup.mixed()
     .required('Image is required'),
 });
+
+export const createCashierSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  fullname: Yup.string().required('Fullname is required'),
+  password: Yup.string()
+      .min(8, 'Password must be at least 8 characters long')
+      .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
+      .matches(/[a-z]/, 'Password must include at least one lowercase letter')
+      .matches(/\d/, 'Password must include at least one number')
+      .matches(
+        /[!@#$%^&*]/,
+        'Password must include at least one special character from !@#$%^&*',
+      ).required('Password is required'), 
+  // image: Yup.mixed().required('Image is required')
+})

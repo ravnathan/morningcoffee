@@ -13,7 +13,7 @@ export default function LoginForm() {
     password: '',
   };
 
-  const onLogin = async (data: UserLogin, action: FormikHelpers<UserLogin>) => {
+  const onLogin = async (data: UserLogin) => {
     try {
       const { result, ok } = await userLogin(data);
       if (!ok) throw result.msg;
@@ -31,8 +31,8 @@ export default function LoginForm() {
         <Formik
           initialValues={initialValues}
           validationSchema={loginSchema}
-          onSubmit={(values, action) => {
-            onLogin(values, action);
+          onSubmit={(values) => {
+            onLogin(values);
           }}
         >
           {() => (

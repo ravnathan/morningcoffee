@@ -9,10 +9,10 @@ import { formatToRupiah } from '@/libs/formatrupiah';
 
 export default function ProductCardTemplate({
   name,
-  price_medium,
-  price_iced_small,
-  price_iced_medium,
-  price_iced_large,
+  medium,
+  iced_small,
+  iced_medium,
+  iced_large,
   image_iced,
   image_hot,
   stock,
@@ -31,15 +31,15 @@ export default function ProductCardTemplate({
 
   const getPrice = () => {
     if (type === 'hot') {
-      return price_medium;
+      return medium;
     } else {
       switch (size) {
         case 'S':
-          return price_iced_small;
+          return iced_small;
         case 'L':
-          return price_iced_large;
+          return iced_large;
         default:
-          return price_iced_medium;
+          return iced_medium;
       }
     }
   };
@@ -49,7 +49,7 @@ export default function ProductCardTemplate({
 
   return (
     <motion.div
-      className="bg-white w-96 h-96 shadow-lg rounded-2xl"
+      className="bg-white w-96 h-96 shadow-lg rounded-2xl "
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -71,7 +71,9 @@ export default function ProductCardTemplate({
           />
           <div className="flex flex-col">
             <h3 className="font-semibold text-lg h-[60px]">{name}</h3>
-            <p className="text-sm text-gray-600 h-[60px] overflow-hidden">{getDescription()}</p>
+            <p className="text-sm text-gray-600 h-[60px] overflow-hidden">
+              {getDescription()}
+            </p>
             <h3 className="font-semibold text-lg">
               {formatToRupiah(getPrice()!)}
             </h3>

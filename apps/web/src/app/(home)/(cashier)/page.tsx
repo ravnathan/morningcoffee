@@ -36,21 +36,21 @@ export default function Home() {
       <div className="mr-[400px]">
         <SearchBar />
         <Category />
-        <div className="pt-10 mx-10 flex flex-wrap gap-4">
+        <div className="pt-10 mx-10 flex flex-wrap gap-7">
           {data.products.map((product, index) => (
             <ProductCardTemplate
               key={index}
               name={product.name}
-              price_medium={product.price_medium}
+              medium={product.medium}
               image_iced={product.image_iced}
               image_hot={product.image_hot}
               stock={product.stock}
               description={product.description}
               description_iced={product.description_iced}
               hot_iced_variant={product.category.hot_iced_variant}
-              price_iced_small={product.price_iced_small}
-              price_iced_medium={product.price_iced_medium}
-              price_iced_large={product.price_iced_large}
+              iced_small={product.iced_small}
+              iced_medium={product.iced_medium}
+              iced_large={product.iced_large}
             />
           ))}
         </div>

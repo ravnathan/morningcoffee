@@ -57,20 +57,20 @@ export class ProductController {
           ? `${base_url}/public/products/${files.image_iced[0].filename}`
           : null;
 
-      const price_iced_small = parseInt(productData.price_iced_small);
-      const price_iced_medium = parseInt(productData.price_iced_medium);
-      const price_iced_large = parseInt(productData.price_iced_large);
+      const iced_small = parseInt(productData.iced_small);
+      const iced_medium = parseInt(productData.iced_medium);
+      const iced_large = parseInt(productData.iced_large);
 
       const product = await prisma.product.create({
         data: {
           ...productData,
           category_name,
           image_hot,
-          price_medium: parseInt(productData.price_medium),
+          medium: parseInt(productData.medium),
           ...(image_iced && { image_iced }),
-          ...(price_iced_small && { price_iced_small }),
-          ...(price_iced_medium && { price_iced_medium }),
-          ...(price_iced_large && { price_iced_large }),
+          ...(iced_small && { iced_small }),
+          ...(iced_medium && { iced_medium }),
+          ...(iced_large && { iced_large }),
           stock: parseInt(productData.stock),
           stock_iced: parseInt(productData.stock_iced),
         },

@@ -65,20 +65,20 @@ model Category {
 }
 
 model Product {
-  id                String  @id @default(cuid())
-  name              String  @unique
-  category_name     String
-  price_medium      Int?
-  price_iced_small  Int?
-  price_iced_medium Int?
-  price_iced_large  Int?
-  image_iced        String?
-  image_hot         String
-  stock             Int
-  stock_iced        Int?
-  description       String  @db.Text
-  description_iced  String? @db.Text
-  is_deleted        Boolean @default(false)
+  id               String  @id @default(cuid())
+  name             String  @unique
+  category_name    String
+  medium           Int?
+  iced_small       Int?
+  iced_medium      Int?
+  iced_large       Int?
+  image_iced       String?
+  image_hot        String
+  stock            Int
+  stock_iced       Int?
+  description      String  @db.Text
+  description_iced String? @db.Text
+  is_deleted       Boolean @default(false)
 
   created_at      DateTime          @default(now())
   uodated_at      DateTime          @default(now())
@@ -101,15 +101,19 @@ model TransactionItem {
   transaction_id String
   product_id     String
   qty            Int
+  variant        String
   price          Float
+  total_price    Float
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
   product        Product     @relation(fields: [product_id], references: [id])
 }
 
 model CashierShift {
-  id      String @id @default(cuid())
-  user_id String
-  shift   Shift
-  value   Float
-  user    User   @relation(fields: [user_id], references: [id])
+  id         String   @id @default(cuid())
+  user_id    String
+  shift      Shift
+  value      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
 }

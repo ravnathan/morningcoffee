@@ -16,10 +16,10 @@ export interface ProductFetch {
   products: Array<{
     name: string;
     category_name: string;
-    price_medium: number;
-    price_iced_small?: number;
-    price_iced_medium?: number;
-    price_iced_large?: number;
+    medium: number;
+    iced_small?: number;
+    iced_medium?: number;
+    iced_large?: number;
     image_iced?: File;
     image_hot: File;
     stock: number;
@@ -35,10 +35,10 @@ export interface ProductFetch {
 
 export interface ProductTemplate {
   name: string;
-  price_medium: number;
-  price_iced_small?: number;
-  price_iced_medium?: number;
-  price_iced_large?: number;
+  medium: number;
+  iced_small?: number;
+  iced_medium?: number;
+  iced_large?: number;
   image_iced?: File;
   image_hot: File;
   stock: number;

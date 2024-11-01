@@ -36,10 +36,10 @@ CREATE TABLE `Product` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `category_name` VARCHAR(191) NOT NULL,
-    `price_medium` INTEGER NULL,
-    `price_iced_small` INTEGER NULL,
-    `price_iced_medium` INTEGER NULL,
-    `price_iced_large` INTEGER NULL,
+    `medium` INTEGER NULL,
+    `iced_small` INTEGER NULL,
+    `iced_medium` INTEGER NULL,
+    `iced_large` INTEGER NULL,
     `image_iced` VARCHAR(191) NULL,
     `image_hot` VARCHAR(191) NOT NULL,
     `stock` INTEGER NOT NULL,
@@ -71,7 +71,9 @@ CREATE TABLE `TransactionItem` (
     `transaction_id` VARCHAR(191) NOT NULL,
     `product_id` VARCHAR(191) NOT NULL,
     `qty` INTEGER NOT NULL,
+    `variant` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
+    `total_price` DOUBLE NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -82,6 +84,8 @@ CREATE TABLE `CashierShift` (
     `user_id` VARCHAR(191) NOT NULL,
     `shift` ENUM('start', 'end') NOT NULL,
     `value` DOUBLE NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
