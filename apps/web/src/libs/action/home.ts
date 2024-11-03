@@ -5,6 +5,6 @@ export const getCategories = async () => {
         },
         method: 'GET'
     })
-
+    
     return res.json()
 }

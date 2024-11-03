@@ -13,10 +13,16 @@ export const loginSchema = Yup.object({
       ).required('Password is required'),
   });
 
-export const createProduct = Yup.object({
-  name: Yup.string().required('Name is required'),
+  export const createProductSchema = Yup.object({
+    name: Yup.string()
+      .required('Name is required')
+      .min(6, 'Name must be at least 6 characters')
+      .matches(/^[A-Za-z]+$/, 'Name must contain only alphabets'),
+    description: Yup.string()
+      .max(50, 'Description must be at most 50 characters')
+      .matches(/^[A-Za-z\s]*$/, 'Description must contain only alphabets'),
+  });
   
-})
 
 export const createCategorySchema = Yup.object().shape({
   name: Yup.string()
@@ -43,3 +49,4 @@ export const createCashierSchema = Yup.object({
       ).required('Password is required'), 
   // image: Yup.mixed().required('Image is required')
 })
+

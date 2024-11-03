@@ -1,13 +1,14 @@
-import CloseIcon from '@/app/(home)/(admin)/admin/_components/closeicon';
+
 import Image from 'next/image';
 import React from 'react';
+import CloseIcon from '../../_components/closeicon';
 
 interface ModalProps {
   children: React.ReactNode;
   closeModal: () => void;
 }
 
-export default function TryingModal({ closeModal, children }: ModalProps) {
+export default function PreviewModal({ closeModal, children }: ModalProps) {
   return (
     <div
       className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"

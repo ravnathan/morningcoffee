@@ -23,6 +23,9 @@ export default function Home() {
     fetchData();
   }, []);
 
+  console.log(data);
+  
+
   if (loading) {
     return <LoadingScreen />;
   }

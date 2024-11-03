@@ -3,13 +3,16 @@ export interface ProductData {
   category_name: string;
   size?: string;
   type?: string;
-  price_S?: number;
-  price_M: number;
-  price_L?: number;
+  medium?: number
+  iced_small?: number;
+  iced_medium?: number;
+  iced_large?: number;
   image_cold?: File;
-  image_hot: File;
+  image_hot?: File;
   stock: number;
+  stock_iced?: number
   description: string;
+  description_iced?: string
 }
 
 export interface ProductFetch {

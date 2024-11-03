@@ -13,37 +13,30 @@ function dataURLtoFile(dataUrl: string, fileName: string): File {
   return new File([byteArray], fileName, { type: mimeType });
 }
 
-export function prepareImageCold(imageCold: string | File): File {
-  return typeof imageCold === 'string'
-    ? dataURLtoFile(imageCold, 'image_cold.png')
-    : imageCold;
-}
-
-export function prepareImageHot(imageHot: string | File): File {
-  return typeof imageHot === 'string'
-    ? dataURLtoFile(imageHot, 'image_hot.png')
-    : imageHot;
-    
-}
-
-export const createProduct = async (data: ProductData) => {
+export const createProduct = async (data: ProductData, hotUrl: string, icedUrl: string) => {
   const token = Cookies.get('token');
   const formData = new FormData();
+  const imageHot = dataURLtoFile(hotUrl, 'image_hot.png');
+  const imageIced = dataURLtoFile(icedUrl, 'image_iced.png');
   formData.append('name', data.name);
   formData.append('category_name', data.category_name);
   if (data.size) formData.append('size', data.size);
   if (data.type) formData.append('type', data.type);
-  if (data.price_S) formData.append('price_S', data.price_S.toString());
-  formData.append('price_M', data.price_M!.toString());
-  if (data.price_L) formData.append('price_L', data.price_L.toString());
+  if (data.medium) formData.append('medium', data.medium.toString());
+  if (data.iced_small)
+    formData.append('iced_small', data.iced_small.toString());
+  if (data.iced_medium)
+    formData.append('iced_medium', data.iced_medium.toString());
+  if (data.iced_large)
+    formData.append('iced_large', data.iced_large.toString());
   formData.append('stock', data.stock.toString());
+  if (data.stock_iced)
+    formData.append('stock_iced', data.stock_iced.toString());
   formData.append('description', data.description);
-  if (data.image_cold) {
-    const imageColdFile = prepareImageCold(data.image_cold);
-    formData.append('image_cold', imageColdFile);
-  }
-  const imageHotFile = prepareImageHot(data.image_hot);
-  formData.append('image_hot', imageHotFile);
+  if (data.description_iced)
+    formData.append('description_iced', data.description_iced);
+  if (data.image_hot) formData.append('image_hot', imageHot);
+  if (data.image_cold) formData.append('image_iced', imageIced);
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}product`, {
     headers: {
@@ -57,13 +50,12 @@ export const createProduct = async (data: ProductData) => {
 };
 
 export const getProduct = async () => {
-
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}product`, {
     headers: {
-      'Content-Type' : 'application/json'
+      'Content-Type': 'application/json',
     },
     method: 'GET',
-  })
+  });
 
-  return res.json()
-}
+  return res.json();
+};

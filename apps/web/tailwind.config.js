@@ -12,6 +12,7 @@ module.exports = {
         coffee: '#6f4e37',
         whiteish: '#F9F8FB',
         lightbrown: '#D2B48C',
+        superlightbrown: "#f7eadf",
         floral: '#FFFAF1'
       },
       borderRadius: {

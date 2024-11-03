@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import PictureModal from '../../_components/picturemodal';
-import { prepareImageHot } from '@/libs/action/products';
 
 export default function CreateCategory() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -81,12 +80,12 @@ export default function CreateCategory() {
         </button>
       </div>
 
-      {modalOpen && (
+      {/* {modalOpen && (
         <PictureModal
           func={prepareImageHot}
           closeModal={() => setModalOpen(false)}
         />
-      )}
+      )} */}
     </form>
   );
 }

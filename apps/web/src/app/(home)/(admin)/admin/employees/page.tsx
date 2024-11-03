@@ -7,10 +7,11 @@ export default function Employees() {
     <div className="p-10">
       <div className='flex justify-between'>
         <h1 className={`text-7xl ${boong.className} text-coffee pb-10`}>
-          Products
+          Employee List
         </h1>
         <CreateEmployee/>
       </div>
+      <EmployeeList/>
     </div>
   );
 }

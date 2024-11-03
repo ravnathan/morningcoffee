@@ -1,51 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import PictureModal from '../../_components/picturemodal';
-import { prepareImageHot } from '@/libs/action/products';
+import { ProductData } from '@/types/product';
+import { getCategories } from '@/libs/action/home';
+import { CategoryProductForm } from '@/types/category';
+import { createProduct } from '@/libs/action/products';
+import { toast } from 'react-toastify';
+
 
 export default function CreateProduct() {
-  const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [type, setType] = useState<string[]>([]);
+  const [categories, setCategories] = useState<CategoryProductForm['categories']>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [types, setTypes] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [prices, setPrices] = useState<{ [key: string]: string }>({});
+  const [modalHotImage, setModalHotImage] = useState(false)
+  const [modalIcedImage, setModalIcedImage] = useState(false)
+  const [hotUrl, setHotUrl] = useState<string | null>(null)
+  const [icedUrl, setIcedUrl] = useState<string | null>(null)
 
-  const categories = [
-    'Coffee',
-    'Juice',
-    'Milk based',
-    'Snacks',
-    'Meals',
-    'Dessert',
-  ];
-  const types = ['Hot', 'Cold'];
+  const initialValues: ProductData = {
+    name: '',
+    category_name: '',
+    size: '',
+    type: '',
+    medium: 0,
+    iced_small: 0,
+    iced_medium: 0,
+    iced_large: 0,
+    description: '',
+    stock: 0,
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await getCategories();
+        setCategories(res.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const typeOptions = ['Hot', 'Iced'];
   const sizeOptions = ['Small', 'Medium', 'Large'];
-
   const isFormDisabled = name.trim() === '';
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(e.target.value);
-    setType([]);
+    setSelectedCategory(e.target.value);
+    setTypes([]);
     setSizes([]);
     setPrices({});
   };
 
-  const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedType = e.target.value;
-    setType((prev) =>
-      prev.includes(selectedType)
-        ? prev.filter((t) => t !== selectedType)
-        : [...prev, selectedType],
+  const handleTypeChange = (type: string) => {
+    setTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
     setSizes([]);
   };
 
   const handleSizeChange = (size: string) => {
     setSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
   };
 
@@ -56,8 +78,21 @@ export default function CreateProduct() {
     }));
   };
 
+  const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
+
+  const onCreateProduct = async (data: ProductData, hotUrl: string, icedUrl: string) => {
+    try {
+      const res = await createProduct(data, hotUrl, icedUrl)
+      toast.success(res.msg)
+      setHotUrl(null)
+      setIcedUrl(null)
+    } catch (error) {
+      toast.error('Failed creating product')
+    }
+  }
+
   return (
-    <form className=" p-6 w-full bg-transparent flex justify-center gap-20">
+    <form className="p-6 w-full bg-transparent flex justify-center gap-20">
       <div className="w-[400px] space-y-10">
         <div className="flex flex-col">
           <label className="text-gray-700">Name</label>
@@ -70,59 +105,54 @@ export default function CreateProduct() {
           />
         </div>
 
+        {/* Category Dropdown */}
         <div className="flex flex-col">
           <label className="text-gray-700">Category</label>
           <select
-            value={category}
+            value={selectedCategory}
             onChange={handleCategoryChange}
             className="border-b-2 p-2 outline-none"
             disabled={isFormDisabled}
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
               </option>
             ))}
           </select>
         </div>
 
-        <div
-          className={`flex flex-col ${
-            isFormDisabled ||
-            !(category === 'Coffee' || category === 'Milk based')
-              ? 'opacity-50 pointer-events-none'
-              : ''
-          }`}
-        >
-          <label className="text-gray-700">Type</label>
-          <div className="flex space-x-4">
-            {types.map((t) => (
-              <label key={t} className="flex items-center">
-                <input
-                  type="checkbox"
-                  value={t}
-                  checked={type.includes(t)}
-                  onChange={handleTypeChange}
-                  className="mr-2"
-                />
-                {t}
-              </label>
-            ))}
+        {/* Type Section */}
+        {selectedCategoryData && (selectedCategoryData.hot_iced_variant || selectedCategoryData.cold_only) && (
+          <div className="flex flex-col">
+            <label className="text-gray-700">Type</label>
+            <div className="flex space-x-4">
+              {typeOptions.map((t) => (
+                <label key={t} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    value={t}
+                    checked={types.includes(t)}
+                    onChange={() => handleTypeChange(t)}
+                    disabled={selectedCategoryData.cold_only && t === 'Hot'}
+                    className="mr-2"
+                  />
+                  {t}
+                </label>
+              ))}
+            </div>
+            {selectedCategoryData.cold_only && (
+              <span className="text-gray-500 text-sm mt-1">
+                Only Iced available for this category
+              </span>
+            )}
           </div>
-        </div>
+        )}
 
+        {/* Size Section */}
         <div
-          className={`flex flex-col ${
-            isFormDisabled ||
-            !(
-              (category === 'Coffee' && type.includes('Cold')) ||
-              category === 'Juice' ||
-              (category === 'Milk based' && type.includes('Cold'))
-            )
-              ? 'opacity-50 pointer-events-none'
-              : ''
-          }`}
+          className={`flex flex-col ${isFormDisabled || !((selectedCategoryData?.hot_iced_variant && types.length > 0) || selectedCategoryData?.cold_only) ? 'opacity-50 pointer-events-none' : ''}`}
         >
           <label className="text-gray-700">Size</label>
           <div className="flex space-x-4">
@@ -141,10 +171,11 @@ export default function CreateProduct() {
           </div>
         </div>
 
+        {/* Price Section */}
         <div className="flex flex-col">
           <label className="text-gray-700">Price</label>
           {sizes.length > 0 ? (
-            ['Small', 'Medium', 'Large']
+            sizeOptions
               .filter((size) => sizes.includes(size))
               .map((size) => (
                 <input
@@ -167,32 +198,28 @@ export default function CreateProduct() {
           )}
         </div>
       </div>
+
       <div className="w-[700px] space-y-10">
+        {/* Image Section */}
         <div className="flex flex-col space-y-5">
           <label className="text-gray-700">Image</label>
           <div className="space-y-5 flex flex-col">
-            {type.includes('Hot') && (
-              <button
-                className="bg-coffee p-2 w-48 rounded-full text-white font-semibold"
-                disabled={isFormDisabled}
-              >
+            {types.includes('Hot') && (
+              <button type='button' className="bg-coffee p-2 w-48 rounded-full text-white font-semibold" disabled={isFormDisabled} onClick={() => setModalHotImage(true)}>
                 Upload Hot Image
               </button>
             )}
-            {type.includes('Cold') && (
-              <button
-                className="bg-coffee p-2 w-48 rounded-full text-white font-semibold"
-                disabled={isFormDisabled}
-              >
-                Upload Cold Image
+            {types.includes('Iced') && (
+              <button type='button' className="bg-coffee p-2 w-48 rounded-full text-white font-semibold" disabled={isFormDisabled} onClick={() => setModalIcedImage(true)}>
+                Upload Iced Image
               </button>
             )}
-            {type.length === 0 && (
+            {types.length === 0 && (
               <button
                 className="bg-coffee p-2 w-48 rounded-full text-white font-semibold"
                 disabled={isFormDisabled}
                 type="button"
-                onClick={() => setModalOpen(true)}
+                onClick={() => setModalHotImage(true)}
               >
                 Upload Image
               </button>
@@ -200,6 +227,7 @@ export default function CreateProduct() {
           </div>
         </div>
 
+        {/* Stock Input */}
         <div className="flex flex-col">
           <label className="text-gray-700">Stock</label>
           <input
@@ -219,6 +247,7 @@ export default function CreateProduct() {
             disabled={isFormDisabled}
           ></textarea>
         </div>
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -228,11 +257,21 @@ export default function CreateProduct() {
           Submit
         </motion.button>
       </div>
-      {modalOpen && (
+      {modalHotImage && (
         <PictureModal
-          func={prepareImageHot}
-          closeModal={() => setModalOpen(false)}
-        />
+        func={(imageDataUrl: string) => {
+          setHotUrl(imageDataUrl)
+          setModalHotImage(false)
+        }} 
+        closeModal={() => setModalHotImage(false)}/>
+      )}
+      {modalIcedImage && (
+        <PictureModal
+        func={(imageDataUrl: string) => {
+          setIcedUrl(imageDataUrl)
+          setModalIcedImage(false)
+        }} 
+        closeModal={() => setModalIcedImage(false)}/>
       )}
     </form>
   );
