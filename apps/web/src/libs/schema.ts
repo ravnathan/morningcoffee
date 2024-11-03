@@ -17,10 +17,11 @@ export const loginSchema = Yup.object({
     name: Yup.string()
       .required('Name is required')
       .min(6, 'Name must be at least 6 characters')
-      .matches(/^[A-Za-z]+$/, 'Name must contain only alphabets'),
+      .matches(/^[A-Za-z\s]+$/, 'Name must contain only alphabets and spaces'), 
     description: Yup.string()
       .max(50, 'Description must be at most 50 characters')
-      .matches(/^[A-Za-z\s]*$/, 'Description must contain only alphabets'),
+      .matches(/^[A-Za-z\s]*$/, 'Description must contain only alphabets and spaces'), 
+    stock: Yup.number().required('Must enter stock amount')
   });
   
 

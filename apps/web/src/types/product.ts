@@ -1,6 +1,6 @@
 export interface ProductData {
   name: string;
-  category_name: string;
+  category_name?: string;
   size?: string;
   type?: string;
   medium?: number

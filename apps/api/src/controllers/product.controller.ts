@@ -28,10 +28,10 @@ export class ProductController {
 
   async createProduct(req: Request, res: Response) {
     try {
-      const { category_name, ...productData } = req.body;
+      const { category_id, ...productData } = req.body;
 
       const categoryExists = await prisma.category.findUnique({
-        where: { name: category_name },
+        where: { name: category_id },
       });
 
       if (!categoryExists) throw new Error('Category does not exist');
@@ -43,13 +43,13 @@ export class ProductController {
       if (productExists) throw new Error('The product already exists');
 
       const files = req.files as {
-        product?: Express.Multer.File[];
+        image_hot?: Express.Multer.File[];
         image_iced?: Express.Multer.File[];
       };
 
       const image_hot =
-        files.product && files.product.length > 0
-          ? `${base_url}/public/products/${files.product[0].filename}`
+        files.image_hot && files.image_hot.length > 0
+          ? `${base_url}/public/products/${files.image_hot[0].filename}`
           : null;
 
       const image_iced =
@@ -64,7 +64,6 @@ export class ProductController {
       const product = await prisma.product.create({
         data: {
           ...productData,
-          category_name,
           image_hot,
           medium: parseInt(productData.medium),
           ...(image_iced && { image_iced }),
@@ -73,6 +72,11 @@ export class ProductController {
           ...(iced_large && { iced_large }),
           stock: parseInt(productData.stock),
           stock_iced: parseInt(productData.stock_iced),
+          category: {
+            connect: {
+              name: categoryExists.name
+            }
+          }
         },
       });
 

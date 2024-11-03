@@ -1,7 +1,6 @@
 import React from 'react';
 import CloseIcon from './closeicon';
 import ImageCropper from './imagecropper';
-import { prepareImageHot } from '@/libs/action/products';
 
 interface ModalProps {
   func: (data: string) => void;

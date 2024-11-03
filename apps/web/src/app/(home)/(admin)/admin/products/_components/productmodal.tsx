@@ -14,7 +14,7 @@ export default function ProductModal({ closeModal, children }: ModalProps) {
       aria-modal="true"
       aria-labelledby="crop-image-dialog"
     >
-      <div className="relative w-[60%] h-[70%] rounded-2xl bg-floral text-black text-left shadow-xl transition-all">
+      <div className="relative w-[70%] h-[70%] rounded-2xl bg-floral text-black text-left shadow-xl transition-all">
         <div className="px-5 py-4 relative">
           <button
             type="button"
