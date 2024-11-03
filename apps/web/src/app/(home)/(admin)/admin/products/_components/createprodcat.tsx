@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import CreateProduct from './productform';
+import CreateProduct from '../create/_components/productform';
 import ProductModal from './productmodal';
 import CategoryModal from './categorymodal';
 import CreateCategory from './categoryform';
@@ -34,8 +34,9 @@ export default function CreateProductCat() {
       )}
       {categoryModalOpen && (
         <CategoryModal
-        closeModal={() => setCategoryModalOpen(false)}
-        children={<CreateCategory/>}/>
+          closeModal={() => setCategoryModalOpen(false)}
+          children={<CreateCategory />}
+        />
       )}
     </div>
   );

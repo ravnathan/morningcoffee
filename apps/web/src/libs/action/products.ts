@@ -19,7 +19,7 @@ export const createProduct = async (data: ProductData) => {
 
   // Add text fields to formData
   formData.append('name', data.name);
-  formData.append('category_name', data.category_name!);
+  formData.append('category_id', data.category_id!);
   if (data.medium) formData.append('medium', data.medium.toString());
   if (data.iced_small) formData.append('iced_small', data.iced_small.toString());
   if (data.iced_medium) formData.append('iced_medium', data.iced_medium.toString());

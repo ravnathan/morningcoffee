@@ -20,9 +20,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import PictureModal from '@/app/(home)/(admin)/admin/_components/picturemodal';
+import PictureModal from '../../../_components/picturemodal';
 
-export default function TryingCreate() {
+export default function ProductForm() {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [stock, setStock] = useState<number>(0);
@@ -87,8 +87,8 @@ export default function TryingCreate() {
       (cat) => cat.id === selectedId,
     );
     if (selectedCategoryData) {
-      setSelectedCategoryId(selectedId); 
-      setSelectedCategoryName(selectedCategoryData.name); 
+      setSelectedCategoryId(selectedId);
+      setSelectedCategoryName(selectedCategoryData.name);
     }
   };
 
@@ -97,7 +97,7 @@ export default function TryingCreate() {
   );
 
   const onCreateProduct = async () => {
-    const nameRegex = /^[A-Za-z\s]+$/; 
+    const nameRegex = /^[A-Za-z\s]+$/;
     if (!name || !nameRegex.test(name)) {
       toast.error('Product name must only contain alphabets and spaces.');
       return;
@@ -148,7 +148,7 @@ export default function TryingCreate() {
         fullWidth
         margin="normal"
       />
-     
+
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
         <Select
@@ -208,7 +208,7 @@ export default function TryingCreate() {
           ))}
         </Box>
       </Box>
-      
+
       <Box margin="normal">
         <Typography>Price</Typography>
         {selectedCategoryData?.cold_only ? (
@@ -272,6 +272,7 @@ export default function TryingCreate() {
             color="primary"
             onClick={() => setModalHotImage(true)}
             disabled={!types.includes('Hot') && !types.includes('Iced')}
+            sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }} 
           >
             {types.includes('Hot')
               ? 'Upload Hot Image'
@@ -284,6 +285,7 @@ export default function TryingCreate() {
               variant="contained"
               color="primary"
               onClick={() => setModalIcedImage(true)}
+              sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }} 
             >
               Upload Iced Image
             </Button>
@@ -294,7 +296,7 @@ export default function TryingCreate() {
               <img
                 src={previewHotImage}
                 alt="Hot Image Preview"
-                style={{ width: '100px', height: 'auto', marginTop: '8px' }} 
+                style={{ width: '100px', height: 'auto', marginTop: '8px' }}
               />
             </Box>
           )}
@@ -304,12 +306,13 @@ export default function TryingCreate() {
               <img
                 src={previewIcedImage}
                 alt="Iced Image Preview"
-                style={{ width: '100px', height: 'auto', marginTop: '8px' }} 
+                style={{ width: '100px', height: 'auto', marginTop: '8px' }}
               />
             </Box>
           )}
         </Box>
       </Box>
+
       <TextField
         label="Description"
         value={description}
@@ -335,27 +338,27 @@ export default function TryingCreate() {
         onInput={(e) => {
           const target = e.target as HTMLInputElement;
           const inputValue = target.value.replace(/[^0-9]/g, '');
-          setStock(Number(inputValue) || 0); 
-          target.value = inputValue; 
+          setStock(Number(inputValue) || 0);
+          target.value = inputValue;
         }}
         variant="outlined"
         fullWidth
         margin="normal"
         inputProps={{
           min: 0,
-          pattern: '[0-9]*', 
+          pattern: '[0-9]*',
         }}
       />
-      
+
       <TextField
         label="Stock Iced Quantity"
         type="text"
         value={stockIced}
         onInput={(e) => {
-          const target = e.target as HTMLInputElement; 
+          const target = e.target as HTMLInputElement;
           const inputValue = target.value.replace(/[^0-9]/g, '');
-          setStockIced(Number(inputValue) || 0); 
-          target.value = inputValue; 
+          setStockIced(Number(inputValue) || 0);
+          target.value = inputValue;
         }}
         variant="outlined"
         fullWidth
@@ -363,7 +366,7 @@ export default function TryingCreate() {
         disabled={isFormDisabled || !types.includes('Iced')}
         inputProps={{
           min: 0,
-          pattern: '[0-9]*', 
+          pattern: '[0-9]*',
         }}
       />
       <Button
@@ -371,6 +374,7 @@ export default function TryingCreate() {
         color="primary"
         onClick={onCreateProduct}
         disabled={isFormDisabled}
+        sx={{ width: 'auto', maxWidth: '200px', textTransform: 'none' }} 
       >
         Create Product
       </Button>
