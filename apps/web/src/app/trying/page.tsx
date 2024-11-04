@@ -1,15 +1,12 @@
 'use client'
 
-import TryingCreate from './_components/template';
-import AppWrapper from './_components/wrapper';
+import TryingTable from "./_components/template";
+
 
 export default function Trying() {
   return (
-    // <EmployeeModal/>
-    <div className="w-[1000px]">
-      <AppWrapper>
-        <TryingCreate />
-      </AppWrapper>
+    <div className="">
+      <TryingTable/>
     </div>
   );
 }

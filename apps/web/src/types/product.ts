@@ -1,18 +1,18 @@
 export interface ProductData {
   name: string;
-  category_id?: string;
+  category_name?: string;
   size?: string;
   type?: string;
-  medium?: number
+  medium?: number;
   iced_small?: number;
   iced_medium?: number;
   iced_large?: number;
   image_cold?: File;
   image_hot?: File;
   stock: number;
-  stock_iced?: number
+  stock_iced?: number;
   description: string;
-  description_iced?: string
+  description_iced?: string;
 }
 
 export interface ProductFetch {
@@ -49,4 +49,26 @@ export interface ProductTemplate {
   description: string;
   description_iced?: string;
   hot_iced_variant: boolean;
+}
+
+export interface ProductTable {
+  products: Array<{
+    id: string
+    name: string;
+    category_name: string;
+    medium: number;
+    iced_small?: number;
+    iced_medium?: number;
+    iced_large?: number;
+    image_iced?: string;
+    image_hot: string;
+    stock: number;
+    stock_iced?: number;
+    description: string;
+    description_iced?: string;
+    is_deleted: boolean;
+    category: {
+      hot_iced_variant: boolean;
+    };
+  }>;
 }

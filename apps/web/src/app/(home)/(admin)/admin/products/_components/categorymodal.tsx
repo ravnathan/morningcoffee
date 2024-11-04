@@ -14,7 +14,7 @@ export default function CategoryModal({ closeModal, children }: ModalProps) {
       aria-modal="true"
       aria-labelledby="crop-image-dialog"
     >
-      <div className="relative w-[40%] h-[60%] rounded-2xl bg-floral text-black text-left shadow-xl transition-all">
+      <div className="relative w-[50%] h-[80%] rounded-2xl bg-floral text-black text-left shadow-xl transition-all">
         <div className="px-5 py-4 relative">
           <button
             type="button"
@@ -24,9 +24,7 @@ export default function CategoryModal({ closeModal, children }: ModalProps) {
             <span className="sr-only">Close menu</span>
             <CloseIcon />
           </button>
-          <div className="flex justify-center items-center h-full">
-            {children}
-          </div>
+          <div className="flex justify-center items-center h-full">{children}</div>
         </div>
       </div>
     </div>

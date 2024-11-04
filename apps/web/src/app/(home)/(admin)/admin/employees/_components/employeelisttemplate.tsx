@@ -9,15 +9,7 @@ interface CashierTemplate extends CashierFetch {
   id: string;
 }
 
-export default function EmployeeListTemplate({
-  idx,
-  username,
-  fullname,
-  role,
-  avatar,
-  onDelete,
-  id,
-}: CashierTemplate) {
+export default function EmployeeListTemplate({ idx, username, fullname, role, avatar, onDelete, id }: CashierTemplate) {
   const [openModal, setOpenModal] = useState(false);
 
   return (
@@ -29,11 +21,7 @@ export default function EmployeeListTemplate({
           <p className="w-[500px] text-left">{fullname}</p>
           <p className="w-12 text-center">{role}</p>
           <div className="w-[200px] flex items-center justify-center">
-            <button
-              type="button"
-              className="bg-coffee py-[2px] px-4 text-white rounded-full text-sm"
-              onClick={() => setOpenModal(true)}
-            >
+            <button type="button" className="bg-coffee py-[2px] px-4 text-white rounded-full text-sm" onClick={() => setOpenModal(true)}>
               preview
             </button>
           </div>
@@ -51,12 +39,7 @@ export default function EmployeeListTemplate({
           </button>
         </div>
       </div>
-      {openModal && (
-        <PreviewModal
-          children={avatar}
-          closeModal={() => setOpenModal(false)}
-        />
-      )}
+      {openModal && <PreviewModal children={avatar} closeModal={() => setOpenModal(false)} />}
     </div>
   );
 }

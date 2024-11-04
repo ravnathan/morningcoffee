@@ -1,11 +1,10 @@
 import React, { ReactNode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6f4e37', 
+      main: '#6f4e37',
     },
   },
   components: {
@@ -14,10 +13,10 @@ const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#6f4e37', 
+              borderColor: '#6f4e37',
             },
             '&:hover fieldset': {
-              borderColor: '#6f4e37', 
+              borderColor: '#6f4e37',
             },
             '&.Mui-focused fieldset': {
               borderColor: '#6f4e37',
@@ -29,10 +28,10 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: '#6f4e37', 
+          backgroundColor: '#6f4e37',
           color: '#ffffff',
           '&:hover': {
-            backgroundColor: '#6f4e37', 
+            backgroundColor: '#6f4e37',
           },
         },
       },
@@ -41,11 +40,9 @@ const theme = createTheme({
 });
 
 interface AppWrapperProps {
-  children: ReactNode; 
+  children: ReactNode;
 }
 
-const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
+export default function AppWrapper({ children }: AppWrapperProps) {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
-};
-
-export default AppWrapper;
+}

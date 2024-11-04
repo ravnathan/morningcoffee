@@ -30,10 +30,21 @@ export class CategoryController {
 
       const image = `${base_url}/public/categories/${req.file?.filename}`;
 
+      const hotIcedVariant = req.body.hot_iced_variant === 'true';
+      const coldOnly = req.body.cold_only === 'true';
+      const sizeSmall = req.body.size_small === 'true';
+      const sizeMedium = req.body.size_medium === 'true';
+      const sizeLarge = req.body.size_large === 'true';
+
       const newCategory = await prisma.category.create({
         data: {
-          ...req.body,
+          name: req.body.name,
           image,
+          hot_iced_variant: hotIcedVariant,
+          cold_only: coldOnly,
+          size_small: sizeSmall,
+          size_medium: sizeMedium,
+          size_large: sizeLarge
         },
       });
 

@@ -28,10 +28,10 @@ export class ProductController {
 
   async createProduct(req: Request, res: Response) {
     try {
-      const { category_id, ...productData } = req.body;
+      const { category_name, ...productData } = req.body;
 
       const categoryExists = await prisma.category.findUnique({
-        where: { name: category_id },
+        where: { name: category_name },
       });
 
       if (!categoryExists) throw new Error('Category does not exist');
@@ -74,9 +74,9 @@ export class ProductController {
           stock_iced: parseInt(productData.stock_iced),
           category: {
             connect: {
-              name: categoryExists.name
-            }
-          }
+              name: categoryExists.name,
+            },
+          },
         },
       });
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ProductData } from '@/types/product';
 import { getCategories } from '@/libs/action/home';
 import { CategoryProductForm } from '@/types/category';
-import { createProduct, dataURLtoFile } from '@/libs/action/products';
+import { createProduct } from '@/libs/action/products';
 import { toast } from 'react-toastify';
 import {
   Box,
@@ -21,14 +21,14 @@ import {
   Typography,
 } from '@mui/material';
 import PictureModal from '../../../_components/picturemodal';
+import { dataURLtoFile } from '@/libs/urltofileconvert';
+import { navigate } from '@/libs/action/server';
 
 export default function ProductForm() {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [stock, setStock] = useState<number>(0);
-  const [categories, setCategories] = useState<
-    CategoryProductForm['categories']
-  >([]);
+  const [categories, setCategories] = useState<CategoryProductForm['categories']>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
   const [types, setTypes] = useState<string[]>([]);
@@ -62,16 +62,23 @@ export default function ProductForm() {
   const sizeOptions = ['Small', 'Medium', 'Large'];
 
   const handleTypeChange = (type: string) => {
-    setTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
-    );
-    setSizes([]);
+    if (selectedCategoryData?.cold_only) {
+      // If cold_only is true, only allow Iced type to be selected
+      if (type === 'Iced') {
+        setTypes((prev) => (prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]));
+        setSizes([]); // Reset sizes when toggling type
+      }
+    } else {
+      // If both variants are allowed
+      setTypes((prev) => (prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]));
+      if (type === 'Iced') {
+        setSizes([]); // Reset sizes when toggling Iced
+      }
+    }
   };
 
   const handleSizeChange = (size: string) => {
-    setSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
-    );
+    setSizes((prev) => (prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]));
   };
 
   const handlePriceChange = (size: string, value: string) => {
@@ -83,18 +90,14 @@ export default function ProductForm() {
 
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     const selectedId = event.target.value;
-    const selectedCategoryData = categories.find(
-      (cat) => cat.id === selectedId,
-    );
+    const selectedCategoryData = categories.find((cat) => cat.id === selectedId);
     if (selectedCategoryData) {
       setSelectedCategoryId(selectedId);
       setSelectedCategoryName(selectedCategoryData.name);
     }
   };
 
-  const selectedCategoryData = categories.find(
-    (cat) => cat.id === selectedCategoryId,
-  );
+  const selectedCategoryData = categories.find((cat) => cat.id === selectedCategoryId);
 
   const onCreateProduct = async () => {
     const nameRegex = /^[A-Za-z\s]+$/;
@@ -111,19 +114,17 @@ export default function ProductForm() {
     try {
       const data: ProductData = {
         name,
-        category_id: selectedCategoryName,
+        category_name: selectedCategoryName,
         stock,
         stock_iced: stockIced,
         description_iced: icedDescription,
         description,
-        medium: prices['Medium'] ? Number(prices['Medium']) : undefined,
+        medium: mediumPrice ? Number(mediumPrice) : undefined,
         iced_small: prices['Small'] ? Number(prices['Small']) : undefined,
         iced_medium: prices['Medium'] ? Number(prices['Medium']) : undefined,
         iced_large: prices['Large'] ? Number(prices['Large']) : undefined,
         image_hot: hotUrl ? dataURLtoFile(hotUrl, 'image_hot.png') : undefined,
-        image_cold: icedUrl
-          ? dataURLtoFile(icedUrl, 'image_cold.png')
-          : undefined,
+        image_cold: icedUrl ? dataURLtoFile(icedUrl, 'image_cold.png') : undefined,
       };
       const res = await createProduct(data);
       toast.success(res.msg);
@@ -132,6 +133,7 @@ export default function ProductForm() {
       setStock(0);
       setHotUrl(null);
       setIcedUrl(null);
+      navigate('/admin/products')
     } catch (error) {
       toast.error('Failed creating product');
     }
@@ -140,22 +142,11 @@ export default function ProductForm() {
   return (
     <Box p={4}>
       <Typography variant="h6">Create Product</Typography>
-      <TextField
-        label="Product Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
+      <TextField label="Product Name" value={name} onChange={(e) => setName(e.target.value)} variant="outlined" fullWidth margin="normal" />
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
-        <Select
-          value={selectedCategoryId}
-          onChange={handleCategoryChange}
-          disabled={isFormDisabled}
-        >
+        <Select value={selectedCategoryId} onChange={handleCategoryChange} disabled={isFormDisabled}>
           <MenuItem value="">
             <em>Select Category</em>
           </MenuItem>
@@ -165,10 +156,7 @@ export default function ProductForm() {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>
-          {selectedCategoryData?.cold_only &&
-            'Only Iced available for this category'}
-        </FormHelperText>
+        <FormHelperText>{selectedCategoryData?.cold_only && 'Only Iced available for this category'}</FormHelperText>
       </FormControl>
       {selectedCategoryData && (
         <Box margin="normal">
@@ -181,7 +169,10 @@ export default function ProductForm() {
                   <Checkbox
                     checked={types.includes(t)}
                     onChange={() => handleTypeChange(t)}
-                    disabled={selectedCategoryData.cold_only && t === 'Hot'}
+                    disabled={
+                      (!selectedCategoryData?.hot_iced_variant && !selectedCategoryData?.cold_only) ||
+                      (selectedCategoryData?.cold_only && t === 'Hot')
+                    }
                   />
                 }
                 label={t}
@@ -200,7 +191,7 @@ export default function ProductForm() {
                 <Checkbox
                   checked={sizes.includes(size)}
                   onChange={() => handleSizeChange(size)}
-                  disabled={isFormDisabled || !types.length}
+                  disabled={isFormDisabled || !types.includes('Iced')}
                 />
               }
               label={size}
@@ -228,12 +219,7 @@ export default function ProductForm() {
                 />
               ))
           ) : (
-            <TextField
-              label="Price"
-              fullWidth
-              margin="normal"
-              disabled={isFormDisabled}
-            />
+            <TextField label="Price" fullWidth margin="normal" disabled={isFormDisabled} />
           )
         ) : (
           <>
@@ -271,21 +257,33 @@ export default function ProductForm() {
             variant="contained"
             color="primary"
             onClick={() => setModalHotImage(true)}
-            disabled={!types.includes('Hot') && !types.includes('Iced')}
-            sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }} 
+            disabled={
+              (!selectedCategoryData?.hot_iced_variant && !selectedCategoryData?.cold_only && types.length > 0) ||
+              (types.length === 0 && selectedCategoryData?.cold_only) ||
+              (types.length === 0 && selectedCategoryData?.hot_iced_variant)
+            }
+            sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }}
           >
-            {types.includes('Hot')
-              ? 'Upload Hot Image'
-              : types.includes('Iced')
-                ? 'Upload Iced Image'
-                : 'Upload Image'}
+            {
+              selectedCategoryData?.hot_iced_variant
+                ? types.includes('Hot')
+                  ? 'Upload Hot Image'
+                  : ''
+                : selectedCategoryData?.cold_only
+                  ? types.includes('Iced')
+                    ? 'Upload Iced Image'
+                    : ''
+                  : 'Upload Image' // Display this when both hot_iced_variant and cold_only are false
+            }
           </Button>
+
           {types.includes('Iced') && types.includes('Hot') && (
             <Button
               variant="contained"
               color="primary"
               onClick={() => setModalIcedImage(true)}
-              sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }} 
+              disabled={(!selectedCategoryData?.hot_iced_variant && !selectedCategoryData?.cold_only) || types.length === 0}
+              sx={{ width: 'auto', maxWidth: '150px', textTransform: 'none' }}
             >
               Upload Iced Image
             </Button>
@@ -293,21 +291,13 @@ export default function ProductForm() {
           {previewHotImage && (
             <Box mt={2}>
               <Typography>Hot Image Preview:</Typography>
-              <img
-                src={previewHotImage}
-                alt="Hot Image Preview"
-                style={{ width: '100px', height: 'auto', marginTop: '8px' }}
-              />
+              <img src={previewHotImage} alt="Hot Image Preview" style={{ width: '100px', height: 'auto', marginTop: '8px' }} />
             </Box>
           )}
           {previewIcedImage && (
             <Box mt={2}>
               <Typography>Iced Image Preview:</Typography>
-              <img
-                src={previewIcedImage}
-                alt="Iced Image Preview"
-                style={{ width: '100px', height: 'auto', marginTop: '8px' }}
-              />
+              <img src={previewIcedImage} alt="Iced Image Preview" style={{ width: '100px', height: 'auto', marginTop: '8px' }} />
             </Box>
           )}
         </Box>
@@ -374,7 +364,7 @@ export default function ProductForm() {
         color="primary"
         onClick={onCreateProduct}
         disabled={isFormDisabled}
-        sx={{ width: 'auto', maxWidth: '200px', textTransform: 'none' }} 
+        sx={{ width: 'auto', maxWidth: '200px', textTransform: 'none' }}
       >
         Create Product
       </Button>

@@ -1,6 +1,6 @@
 export interface CategoryProductForm {
   categories: Array<{
-    id: string
+    id: string;
     name: string;
     image: string;
     hot_iced_variant: boolean;
@@ -10,4 +10,14 @@ export interface CategoryProductForm {
     size_large: boolean;
     is_deleted: boolean;
   }>;
+}
+
+export interface CategoryForm {
+  name: string;
+  image: File;
+  hot_iced_variant?: boolean;
+  cold_only?: boolean;
+  size_small?: boolean;
+  size_medium?: boolean;
+  size_large?: boolean;
 }

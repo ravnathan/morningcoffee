@@ -35,49 +35,40 @@ export const createCashier = async (data: CashierData, dataUrl: string) => {
   formData.append('password', data.password);
   formData.append('avatar', portraitImage);
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      method: 'POST',
-      body: formData,
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+    method: 'POST',
+    body: formData,
+  });
 
   return res.json();
 };
 
 export const getCashier = async () => {
   const token = Cookies.get('token');
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      method: 'GET',
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-  );
+    method: 'GET',
+  });
 
   return res.json();
 };
 
 export const deleteCashierData = async (id: string) => {
   const token = Cookies.get('token');
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      method: 'DELETE',
-      body: JSON.stringify({id})
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}admin/cashier`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-  );
+    method: 'DELETE',
+    body: JSON.stringify({ id }),
+  });
 
-  return res
+  return res;
 };

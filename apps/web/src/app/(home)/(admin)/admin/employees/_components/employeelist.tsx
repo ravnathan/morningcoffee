@@ -38,7 +38,7 @@ export default function EmployeeList() {
       try {
         const res = await deleteCashierData(deleteCashier);
         if (!res.ok) {
-          throw new Error('Failed to delete address');
+          throw new Error('Failed to delete data');
         }
         await fetchData();
         toast.success('Data has been deleted');
