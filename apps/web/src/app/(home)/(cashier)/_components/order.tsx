@@ -1,13 +1,24 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import CashierStatus from './cashierstatus';
-import OrderDetails from './orderdetails';
-import Payment from './payment';
+import { FaMoneyBillWave, FaCreditCard } from 'react-icons/fa';
+import OrderTemplate from './ordertemplate';
+import { OrderItem } from '../page';
 
-export default function Order() {
+interface OrderProps {
+  items: OrderItem[];
+  removeFromOrder: (id: string) => void;
+}
+
+export default function Order({ items, removeFromOrder }: OrderProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState('Debit Card');
+
+  const handleSelectMethod = (method: SetStateAction<string>) => {
+    setSelectedMethod(method);
+  };
 
   return (
     <div className="relative">
@@ -36,10 +47,48 @@ export default function Order() {
 
         <CashierStatus />
         <div className="flex items-center flex-col">
-          <div className='h-[550px]'>
-            <OrderDetails />
+          <div className="h-[400px] overflow-y-auto">
+            <div className="flex flex-wrap gap-2">
+              {items.map((item) => (
+                <OrderTemplate
+                  key={item.id}
+                  id={item.id}
+                  img={item.img}
+                  name={item.name}
+                  type={item.type}
+                  size={item.size}
+                  price={item.price}
+                  hot_iced_variant={item.hot_iced_variant}
+                  removeFromOrder={removeFromOrder}
+                />
+              ))}
+            </div>
           </div>
-          <Payment />
+          <div></div>
+          <div className="w-80 mx-auto">
+            <div className="text-xl font-semibold mb-4">Payment Method</div>
+            <div className="flex justify-evenly mb-6">
+              <button
+                onClick={() => handleSelectMethod('Cash')}
+                className={`flex flex-col items-center justify-center w-28 h-20 rounded-lg border-2 ${
+                  selectedMethod === 'Cash' ? 'border-coffee bg-white' : 'border-transparent bg-gray-100'
+                } transition duration-300`}
+              >
+                <FaMoneyBillWave className="w-8 h-8 text-gray-600 mb-1" />
+                <span className="text-gray-600 font-semibold">Cash</span>
+              </button>
+              <button
+                onClick={() => handleSelectMethod('Debit Card')}
+                className={`flex flex-col items-center justify-center w-28 h-20 rounded-lg border-2 ${
+                  selectedMethod === 'Debit Card' ? 'border-coffee bg-white' : 'border-transparent bg-gray-100'
+                } transition duration-300`}
+              >
+                <FaCreditCard className="w-8 h-8 text-gray-600 mb-1" />
+                <span className="text-gray-600 font-semibold">Debit Card</span>
+              </button>
+            </div>
+            <button className="w-full bg-coffee text-white text-lg py-4 rounded-lg font-semibold">Proceed</button>
+          </div>
         </div>
       </motion.div>
     </div>

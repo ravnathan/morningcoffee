@@ -21,8 +21,6 @@ export default function Category() {
         fetchData();
     }, []);
 
-    console.log(data);
-
     return (
         <div>
             <div className="flex items-center justify-evenly pt-10 flex-wrap">

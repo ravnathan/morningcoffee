@@ -7,6 +7,18 @@ import { motion } from 'framer-motion';
 import { ProductTemplate } from '@/types/product';
 import { formatToRupiah } from '@/libs/formatrupiah';
 
+interface ProductCardProps extends ProductTemplate {
+  addToOrder: (item: {
+    id: string;
+    img: string;
+    name: string;
+    type: string;
+    size: string;
+    price: number;
+    quantity: number;
+    hot_iced_variant: boolean;
+  }) => void;
+}
 export default function ProductCardTemplate({
   name,
   medium,
@@ -21,23 +33,21 @@ export default function ProductCardTemplate({
   description_iced,
   hot_iced_variant,
   cold_only,
-}: ProductTemplate) {
+  addToOrder,
+}: ProductCardProps) {
   const [type, setType] = useState<'hot' | 'ice'>(cold_only ? 'ice' : 'hot');
   const [size, setSize] = useState<'S' | 'M' | 'L'>('M');
   const [currentImage, setCurrentImage] = useState<string>(cold_only ? image_hot || '' : image_hot || '');
-
 
   useEffect(() => {
     if (cold_only) {
       setType('ice');
       setSize('M');
-      setCurrentImage(image_hot || ''); 
+      setCurrentImage(image_hot || '');
     } else {
       setCurrentImage(type === 'hot' ? image_hot || '' : image_iced || '');
     }
   }, [type, image_hot, image_iced, cold_only]);
-  
-
 
   const getPrice = () => {
     if (type === 'hot') {
@@ -70,14 +80,7 @@ export default function ProductCardTemplate({
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <Image
-            src={currentImage}
-            width={150}
-            height={100}
-            style={{ objectFit: 'cover' }}
-            className="w-[150px] h-[150px]"
-            alt={name}
-          />
+          <Image src={currentImage} width={150} height={100} style={{ objectFit: 'cover' }} className="w-[150px] h-[150px]" alt={name} />
           <div className="flex flex-col">
             <h3 className="font-semibold text-lg h-[60px]">{name}</h3>
             <p className="text-sm text-gray-600 h-[60px] overflow-hidden">{getDescription()}</p>
@@ -104,7 +107,7 @@ export default function ProductCardTemplate({
               <button
                 onClick={() => {
                   setType('ice');
-                  setSize('M'); 
+                  setSize('M');
                 }}
                 disabled={!hot_iced_variant}
                 className={`p-2 w-10 h-10 border rounded-full flex items-center justify-center ${type === 'ice' ? 'text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-200 border-gray-400'} ${!hot_iced_variant ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -142,6 +145,20 @@ export default function ProductCardTemplate({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
+          onClick={() => {
+            const price = getPrice() ?? 0;
+            const itemToAdd = {
+              id: `${name}-${type}-${size}`,
+              img: currentImage,
+              name,
+              size,
+              type,
+              price,
+              hot_iced_variant,
+              quantity: 1,
+            };
+            addToOrder(itemToAdd);
+          }}
         >
           Add to Order
         </motion.button>

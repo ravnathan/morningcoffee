@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 type Product = {
-    img: File;
+    img: string;
     id: string; // Unique identifier for the product
     name: string;
     price: number;
