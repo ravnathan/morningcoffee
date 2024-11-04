@@ -106,19 +106,14 @@ export default function ProductForm() {
       return;
     }
 
-    if (!description || stock < 0 || !selectedCategoryName) {
-      toast.error('Please fill in all fields correctly.');
-      return;
-    }
-
     try {
       const data: ProductData = {
         name,
         category_name: selectedCategoryName,
-        stock,
+        stock: stock ? Number(stock) : undefined,
         stock_iced: stockIced,
         description_iced: icedDescription,
-        description,
+        description: description ? description: undefined,
         medium: mediumPrice ? Number(mediumPrice) : undefined,
         iced_small: prices['Small'] ? Number(prices['Small']) : undefined,
         iced_medium: prices['Medium'] ? Number(prices['Medium']) : undefined,

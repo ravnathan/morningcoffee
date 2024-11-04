@@ -12,9 +12,9 @@ export const createProduct = async (data: ProductData) => {
   if (data.iced_small) formData.append('iced_small', data.iced_small.toString());
   if (data.iced_medium) formData.append('iced_medium', data.iced_medium.toString());
   if (data.iced_large) formData.append('iced_large', data.iced_large.toString());
-  formData.append('stock', data.stock.toString());
+  if (data.stock) formData.append('stock', data.stock.toString());
   if (data.stock_iced) formData.append('stock_iced', data.stock_iced.toString());
-  formData.append('description', data.description);
+  if (data.description) formData.append('description', data.description);
   if (data.description_iced) formData.append('description_iced', data.description_iced);
   if (data.image_hot) formData.append('image_hot', data.image_hot);
   if (data.image_cold) formData.append('image_iced', data.image_cold);

@@ -51,6 +51,7 @@ export default function Home() {
               description={product.description}
               description_iced={product.description_iced}
               hot_iced_variant={product.category.hot_iced_variant}
+              cold_only={product.category.cold_only}
               iced_small={product.iced_small}
               iced_medium={product.iced_medium}
               iced_large={product.iced_large}

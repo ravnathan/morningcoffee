@@ -20,14 +20,24 @@ export default function ProductCardTemplate({
   description,
   description_iced,
   hot_iced_variant,
+  cold_only,
 }: ProductTemplate) {
-  const [type, setType] = useState<'hot' | 'ice'>('hot');
+  const [type, setType] = useState<'hot' | 'ice'>(cold_only ? 'ice' : 'hot');
   const [size, setSize] = useState<'S' | 'M' | 'L'>('M');
-  const [currentImage, setCurrentImage] = useState<File | undefined>(image_hot);
+  const [currentImage, setCurrentImage] = useState<string>(cold_only ? image_hot || '' : image_hot || '');
+
 
   useEffect(() => {
-    setCurrentImage(type === 'hot' ? image_hot : image_iced);
-  }, [type, image_hot, image_iced]);
+    if (cold_only) {
+      setType('ice');
+      setSize('M');
+      setCurrentImage(image_hot || ''); 
+    } else {
+      setCurrentImage(type === 'hot' ? image_hot || '' : image_iced || '');
+    }
+  }, [type, image_hot, image_iced, cold_only]);
+  
+
 
   const getPrice = () => {
     if (type === 'hot') {
@@ -44,8 +54,7 @@ export default function ProductCardTemplate({
     }
   };
 
-  const getDescription = () =>
-    type === 'hot' ? description : description_iced;
+  const getDescription = () => (type === 'hot' ? description : description_iced);
 
   return (
     <motion.div
@@ -62,7 +71,7 @@ export default function ProductCardTemplate({
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           <Image
-            src={`${currentImage}`}
+            src={currentImage}
             width={150}
             height={100}
             style={{ objectFit: 'cover' }}
@@ -71,41 +80,31 @@ export default function ProductCardTemplate({
           />
           <div className="flex flex-col">
             <h3 className="font-semibold text-lg h-[60px]">{name}</h3>
-            <p className="text-sm text-gray-600 h-[60px] overflow-hidden">
-              {getDescription()}
-            </p>
-            <h3 className="font-semibold text-lg">
-              {formatToRupiah(getPrice()!)}
-            </h3>
+            <p className="text-sm text-gray-600 h-[60px] overflow-hidden">{getDescription()}</p>
+            <h3 className="font-semibold text-lg">{formatToRupiah(getPrice()!)}</h3>
           </div>
         </motion.div>
 
         <div className="flex justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5 }}>
             <h3 className="font-semibold pb-4">Type</h3>
             <div className="flex space-x-4">
               <button
                 onClick={() => {
-                  if (hot_iced_variant) {
+                  if (hot_iced_variant && !cold_only) {
                     setType('hot');
                     setSize('M');
                   }
                 }}
-                disabled={!hot_iced_variant}
-                className={`p-2 w-10 h-10 border rounded-full flex items-center justify-center ${type === 'hot' ? 'text-red-500 border-red-500' : 'text-gray-500 bg-gray-200 border-gray-400'} ${!hot_iced_variant ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hot_iced_variant || cold_only}
+                className={`p-2 w-10 h-10 border rounded-full flex items-center justify-center ${type === 'hot' ? 'text-red-500 border-red-500' : 'text-gray-500 bg-gray-200 border-gray-400'} ${!hot_iced_variant || cold_only ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <FaFire size={24} />
               </button>
               <button
                 onClick={() => {
-                  if (hot_iced_variant) {
-                    setType('ice');
-                    setSize('M');
-                  }
+                  setType('ice');
+                  setSize('M'); 
                 }}
                 disabled={!hot_iced_variant}
                 className={`p-2 w-10 h-10 border rounded-full flex items-center justify-center ${type === 'ice' ? 'text-blue-500 border-blue-500' : 'text-gray-500 bg-gray-200 border-gray-400'} ${!hot_iced_variant ? 'opacity-50 cursor-not-allowed' : ''}`}

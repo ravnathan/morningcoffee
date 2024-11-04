@@ -13,6 +13,7 @@ export class ProductController {
           category: {
             select: {
               hot_iced_variant: true,
+              cold_only: true
             },
           },
         },
@@ -64,8 +65,8 @@ export class ProductController {
       const product = await prisma.product.create({
         data: {
           ...productData,
-          image_hot,
           medium: parseInt(productData.medium),
+          ...(image_hot && { image_hot }),
           ...(image_iced && { image_iced }),
           ...(iced_small && { iced_small }),
           ...(iced_medium && { iced_medium }),

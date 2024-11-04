@@ -74,9 +74,9 @@ model Product {
   iced_large       Int?
   image_iced       String?
   image_hot        String
-  stock            Int
+  stock            Int?
   stock_iced       Int?
-  description      String  @db.Text
+  description      String?  @db.Text
   description_iced String? @db.Text
   is_deleted       Boolean @default(false)
 

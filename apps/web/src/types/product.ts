@@ -9,9 +9,9 @@ export interface ProductData {
   iced_large?: number;
   image_cold?: File;
   image_hot?: File;
-  stock: number;
+  stock?: number;
   stock_iced?: number;
-  description: string;
+  description?: string;
   description_iced?: string;
 }
 
@@ -23,32 +23,34 @@ export interface ProductFetch {
     iced_small?: number;
     iced_medium?: number;
     iced_large?: number;
-    image_iced?: File;
-    image_hot: File;
-    stock: number;
+    image_iced?: string;
+    image_hot?: string;
+    stock?: number;
     stock_iced?: number;
-    description: string;
+    description?: string;
     description_iced?: string;
     is_deleted: boolean;
     category: {
       hot_iced_variant: boolean;
+      cold_only: boolean
     };
   }>;
 }
 
 export interface ProductTemplate {
   name: string;
-  medium: number;
+  medium?: number;
   iced_small?: number;
   iced_medium?: number;
   iced_large?: number;
-  image_iced?: File;
-  image_hot: File;
-  stock: number;
+  image_iced?: string;
+  image_hot?: string;
+  stock?: number;
   stock_iced?: number;
-  description: string;
+  description?: string;
   description_iced?: string;
   hot_iced_variant: boolean;
+  cold_only: boolean
 }
 
 export interface ProductTable {
@@ -69,6 +71,7 @@ export interface ProductTable {
     is_deleted: boolean;
     category: {
       hot_iced_variant: boolean;
+      cold_only: boolean
     };
   }>;
 }
