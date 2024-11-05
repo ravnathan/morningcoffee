@@ -37,17 +37,28 @@ export const createCategorySchema = Yup.object().shape({
 });
 
 export const createCashierSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
-  fullname: Yup.string().required('Fullname is required'),
+  fullname: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, 'Full name can only contain alphabets and spaces')
+    .min(6, 'Full name must be at least 6 characters')
+    .required('Full name is required'),
   password: Yup.string()
-      .min(8, 'Password must be at least 8 characters long')
-      .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
-      .matches(/[a-z]/, 'Password must include at least one lowercase letter')
-      .matches(/\d/, 'Password must include at least one number')
-      .matches(
-        /[!@#$%^&*]/,
-        'Password must include at least one special character from !@#$%^&*',
-      ).required('Password is required'), 
-  // image: Yup.mixed().required('Image is required')
-})
+    .min(8, 'Password must be at least 8 characters long')
+    .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must include at least one lowercase letter')
+    .matches(/\d/, 'Password must include at least one number')
+    .matches(
+      /[!@#$%^&*]/,
+      'Password must include at least one special character from !@#$%^&*',
+    )
+    .required('Password is required'),
+});
+
+
+export const debitCardSchema = Yup.object().shape({
+  debitInfo: Yup.string()
+    .required('Debit card information is required')
+    .matches(/^\d{16}$/, 'Debit card must be 16 digits long'),
+});
+
+
 

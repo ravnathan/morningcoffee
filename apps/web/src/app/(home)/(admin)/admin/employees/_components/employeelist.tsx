@@ -3,17 +3,25 @@
 import { deleteCashierData, getCashier } from '@/libs/action/user';
 import { CashierList } from '@/types/user';
 import { useEffect, useState } from 'react';
-import EmployeeListTemplate from './employeelisttemplate';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+} from '@mui/material';
+import Image from 'next/image';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/confirmationmodal';
 
 export default function EmployeeList() {
-  const [data, setData] = useState<CashierList>();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [data, setData] = useState<CashierList | null>(null);
   const [deleteCashier, setDeleteCashier] = useState<string | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-  const [editCashier, setEditCashier] = useState<string | null>(null);
-  const [editConfirmation, setEditConfirmation] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -28,18 +36,16 @@ export default function EmployeeList() {
     fetchData();
   }, []);
 
-  const handleDelete = (cashier_id: string) => {
-    setDeleteCashier(cashier_id);
+  const handleDelete = (cashierId: string) => {
+    setDeleteCashier(cashierId);
     setDeleteConfirmation(true);
   };
 
   const confirmDelete = async () => {
-    if (deleteCashier !== null) {
+    if (deleteCashier) {
       try {
         const res = await deleteCashierData(deleteCashier);
-        if (!res.ok) {
-          throw new Error('Failed to delete data');
-        }
+        if (!res.ok) throw new Error('Failed to delete data');
         await fetchData();
         toast.success('Data has been deleted');
       } catch (error) {
@@ -52,32 +58,46 @@ export default function EmployeeList() {
   };
 
   return (
-    <div className="border-t-2 border-coffee">
-      <div className="mx-20 h-10 bg-coffee flex justify-between items-center px-5 text-white font-semibold mt-32">
-        <div className="flex gap-10">
-          <p className="w-5">No.</p>
-          <p className="w-32">Username</p>
-          <p className="w-[500px] text-center">Full Name</p>
-          <p className="w-12 text-center">Role</p>
-          <p className="w-[200px] text-center">Portrait</p>
-        </div>
-        <div className="flex gap-8 mr-4">
-          <div className="w-10">Edit</div>
-          <div className="w-10">Delete</div>
-        </div>
-      </div>
-      {data?.cashiersData.map((cashier, index) => (
-        <EmployeeListTemplate
-          idx={index}
-          fullname={cashier.fullname}
-          username={cashier.username}
-          role={cashier.role}
-          avatar={cashier.avatar}
-          id={cashier.id}
-          onDelete={handleDelete}
-        />
-      ))}
-
+    <TableContainer component={Paper} sx={{ backgroundColor: '#F9F8FB' }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: '600' }}>No.</TableCell>
+            <TableCell sx={{ fontWeight: '600' }}>Username</TableCell>
+            <TableCell sx={{ fontWeight: '600' }}>Full Name</TableCell>
+            <TableCell sx={{ fontWeight: '600' }}>Role</TableCell>
+            <TableCell sx={{ fontWeight: '600' }}>Portrait</TableCell>
+            <TableCell sx={{ fontWeight: '600' }}>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.cashiersData.map((cashier, index) => (
+            <TableRow key={cashier.id}>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell>{cashier.username}</TableCell>
+              <TableCell>{cashier.fullname}</TableCell>
+              <TableCell>{cashier.role}</TableCell>
+              <TableCell>
+                {cashier.avatar ? (
+                  <Image
+                    src={cashier.avatar}
+                    alt={`${cashier.fullname}'s portrait`}
+                    width={50}
+                    height={50}
+                  />
+                ) : (
+                  '-'
+                )}
+              </TableCell>
+              <TableCell>
+                <IconButton onClick={() => handleDelete(cashier.id)}>
+                  <DeleteIcon color="error" />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {deleteConfirmation && (
         <ConfirmationModal
           isOpen={deleteConfirmation}
@@ -87,6 +107,6 @@ export default function EmployeeList() {
           message="Are you sure you want to delete this user?"
         />
       )}
-    </div>
+    </TableContainer>
   );
 }

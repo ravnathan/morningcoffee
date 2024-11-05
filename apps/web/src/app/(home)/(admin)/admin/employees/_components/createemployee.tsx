@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import EmployeeModal from './employeemodal';
 import EmployeeForm from './employeeform';
+import AppWrapper from '../../products/_components/productwrapper';
 
 export default function CreateEmployee() {
   const [employeeModal, setEmployeeModal] = useState(false);
@@ -19,7 +20,11 @@ export default function CreateEmployee() {
       </div>
       {employeeModal && (
         <EmployeeModal
-          children={<EmployeeForm closeModal={() => setEmployeeModal(false)} />}
+          children={
+            <AppWrapper>
+              <EmployeeForm closeModal={() => setEmployeeModal(false)} />
+            </AppWrapper>
+          }
           closeModal={() => setEmployeeModal(false)}
         />
       )}

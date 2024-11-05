@@ -4,7 +4,6 @@ export interface UserLogin {
 }
 
 export interface CashierData {
-  username: string;
   fullname: string;
   password: string;
   avatar?: File;

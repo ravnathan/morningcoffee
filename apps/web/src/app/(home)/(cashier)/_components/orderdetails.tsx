@@ -1,12 +1,8 @@
-import { useOrderStore } from '@/zustand/orderstore';
+import { usePriceStore } from '@/zustand/pricestore';
 import OrderTemplate from './ordertemplate';
 
 export default function OrderDetails() {
-  const products = useOrderStore((state) => state.products);
+  const products = usePriceStore((state) => state.products);
 
-  return (
-    <div>
-     
-    </div>
-  );
+  return <div></div>;
 }

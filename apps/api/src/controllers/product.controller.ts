@@ -13,7 +13,7 @@ export class ProductController {
           category: {
             select: {
               hot_iced_variant: true,
-              cold_only: true
+              cold_only: true,
             },
           },
         },
@@ -44,19 +44,13 @@ export class ProductController {
       if (productExists) throw new Error('The product already exists');
 
       const files = req.files as {
-        image_hot?: Express.Multer.File[];
-        image_iced?: Express.Multer.File[];
+        image_1?: Express.Multer.File[];
+        image_2?: Express.Multer.File[];
       };
 
-      const image_hot =
-        files.image_hot && files.image_hot.length > 0
-          ? `${base_url}/public/products/${files.image_hot[0].filename}`
-          : null;
+      const image_1 = files.image_1 && files.image_1.length > 0 ? `${base_url}/public/products/${files.image_1[0].filename}` : null;
 
-      const image_iced =
-        files.image_iced && files.image_iced.length > 0
-          ? `${base_url}/public/products/${files.image_iced[0].filename}`
-          : null;
+      const image_2 = files.image_2 && files.image_2.length > 0 ? `${base_url}/public/products/${files.image_2[0].filename}` : null;
 
       const iced_small = parseInt(productData.iced_small);
       const iced_medium = parseInt(productData.iced_medium);
@@ -66,8 +60,8 @@ export class ProductController {
         data: {
           ...productData,
           medium: parseInt(productData.medium),
-          ...(image_hot && { image_hot }),
-          ...(image_iced && { image_iced }),
+          ...(image_1 && { image_1 }),
+          ...(image_2 && { image_2 }),
           ...(iced_small && { iced_small }),
           ...(iced_medium && { iced_medium }),
           ...(iced_large && { iced_large }),

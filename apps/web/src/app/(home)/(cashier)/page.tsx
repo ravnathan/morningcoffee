@@ -10,23 +10,21 @@ import LoadingScreen from '@/components/loadingcomp';
 import ProductCardTemplate from './_components/producttemplate';
 
 export interface OrderItem {
-  id: string; 
+  id: string;
+  prodID: string;
   img: string;
   name: string;
-  type: string
-  size: string
+  type: string;
+  size: string | undefined;
   price: number;
-  quantity: number
-  hot_iced_variant: boolean
+  quantity: number;
+  hot_iced_variant: boolean;
 }
-
 
 export default function Home() {
   const [data, setData] = useState<ProductFetch | null>(null);
   const [loading, setLoading] = useState(true);
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([])
-
-  
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,10 +38,8 @@ export default function Home() {
 
   const addToOrder = (item: OrderItem) => {
     setOrderItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex(
-        (orderItem) => orderItem.name === item.name && orderItem.price === item.price
-      );
-  
+      const existingItemIndex = prevItems.findIndex((orderItem) => orderItem.name === item.name && orderItem.price === item.price);
+
       if (existingItemIndex !== -1) {
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex] = {
@@ -55,13 +51,14 @@ export default function Home() {
       return [...prevItems, { ...item, quantity: 1 }];
     });
   };
-  
-  
 
   const removeFromOrder = (id: string) => {
-    setOrderItems((prevItems) => prevItems.filter(item => item.id !== id));
+    setOrderItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
+  const clearOrderItems = () => {
+    setOrderItems([]);
+  };
 
   if (loading) {
     return <LoadingScreen />;
@@ -72,7 +69,7 @@ export default function Home() {
   }
   return (
     <div>
-      <Order items={orderItems} removeFromOrder={removeFromOrder}/>
+      <Order items={orderItems} removeFromOrder={removeFromOrder} clearOrderItems={clearOrderItems} />
       <div className="mr-[400px]">
         <SearchBar />
         <Category />
@@ -80,10 +77,11 @@ export default function Home() {
           {data.products.map((product, index) => (
             <ProductCardTemplate
               key={index}
+              prodID={product.id}
               name={product.name}
               medium={product.medium}
-              image_iced={product.image_iced}
-              image_hot={product.image_hot}
+              image_2={product.image_2}
+              image_1={product.image_1}
               stock={product.stock}
               description={product.description}
               description_iced={product.description_iced}
@@ -100,4 +98,3 @@ export default function Home() {
     </div>
   );
 }
-

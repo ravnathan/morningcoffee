@@ -113,12 +113,12 @@ export default function ProductForm() {
         stock: stock ? Number(stock) : undefined,
         stock_iced: stockIced,
         description_iced: icedDescription,
-        description: description ? description: undefined,
+        description: description ? description : undefined,
         medium: mediumPrice ? Number(mediumPrice) : undefined,
         iced_small: prices['Small'] ? Number(prices['Small']) : undefined,
         iced_medium: prices['Medium'] ? Number(prices['Medium']) : undefined,
         iced_large: prices['Large'] ? Number(prices['Large']) : undefined,
-        image_hot: hotUrl ? dataURLtoFile(hotUrl, 'image_hot.png') : undefined,
+        image_1: hotUrl ? dataURLtoFile(hotUrl, 'image_1.png') : undefined,
         image_cold: icedUrl ? dataURLtoFile(icedUrl, 'image_cold.png') : undefined,
       };
       const res = await createProduct(data);
@@ -128,7 +128,7 @@ export default function ProductForm() {
       setStock(0);
       setHotUrl(null);
       setIcedUrl(null);
-      navigate('/admin/products')
+      navigate('/admin/products');
     } catch (error) {
       toast.error('Failed creating product');
     }

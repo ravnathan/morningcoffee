@@ -10,10 +10,11 @@ import { formatToRupiah } from '@/libs/formatrupiah';
 interface ProductCardProps extends ProductTemplate {
   addToOrder: (item: {
     id: string;
+    prodID: string;
     img: string;
     name: string;
     type: string;
-    size: string;
+    size: string | undefined;
     price: number;
     quantity: number;
     hot_iced_variant: boolean;
@@ -21,12 +22,13 @@ interface ProductCardProps extends ProductTemplate {
 }
 export default function ProductCardTemplate({
   name,
+  prodID,
   medium,
   iced_small,
   iced_medium,
   iced_large,
-  image_iced,
-  image_hot,
+  image_2,
+  image_1,
   stock,
   stock_iced,
   description,
@@ -36,18 +38,18 @@ export default function ProductCardTemplate({
   addToOrder,
 }: ProductCardProps) {
   const [type, setType] = useState<'hot' | 'ice'>(cold_only ? 'ice' : 'hot');
-  const [size, setSize] = useState<'S' | 'M' | 'L'>('M');
-  const [currentImage, setCurrentImage] = useState<string>(cold_only ? image_hot || '' : image_hot || '');
+  const [size, setSize] = useState<'S' | 'M' | 'L'>();
+  const [currentImage, setCurrentImage] = useState<string>(cold_only ? image_1 || '' : image_1 || '');
 
   useEffect(() => {
     if (cold_only) {
       setType('ice');
       setSize('M');
-      setCurrentImage(image_hot || '');
+      setCurrentImage(image_1 || '');
     } else {
-      setCurrentImage(type === 'hot' ? image_hot || '' : image_iced || '');
+      setCurrentImage(type === 'hot' ? image_1 || '' : image_2 || '');
     }
-  }, [type, image_hot, image_iced, cold_only]);
+  }, [type, image_1, image_2, cold_only]);
 
   const getPrice = () => {
     if (type === 'hot') {
@@ -63,6 +65,8 @@ export default function ProductCardTemplate({
       }
     }
   };
+
+  // console.log(size);
 
   const getDescription = () => (type === 'hot' ? description : description_iced);
 
@@ -96,7 +100,7 @@ export default function ProductCardTemplate({
                 onClick={() => {
                   if (hot_iced_variant && !cold_only) {
                     setType('hot');
-                    setSize('M');
+                    setSize(undefined);
                   }
                 }}
                 disabled={!hot_iced_variant || cold_only}
@@ -150,6 +154,7 @@ export default function ProductCardTemplate({
             const itemToAdd = {
               id: `${name}-${type}-${size}`,
               img: currentImage,
+              prodID,
               name,
               size,
               type,

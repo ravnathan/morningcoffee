@@ -1,7 +1,6 @@
 import { ProductData } from '@/types/product';
 import Cookies from 'js-cookie';
 
-
 export const createProduct = async (data: ProductData) => {
   const token = Cookies.get('token');
   const formData = new FormData();
@@ -16,8 +15,8 @@ export const createProduct = async (data: ProductData) => {
   if (data.stock_iced) formData.append('stock_iced', data.stock_iced.toString());
   if (data.description) formData.append('description', data.description);
   if (data.description_iced) formData.append('description_iced', data.description_iced);
-  if (data.image_hot) formData.append('image_hot', data.image_hot);
-  if (data.image_cold) formData.append('image_iced', data.image_cold);
+  if (data.image_1) formData.append('image_1', data.image_1);
+  if (data.image_cold) formData.append('image_2', data.image_cold);
 
   for (let [key, value] of formData.entries()) {
     console.log(key, value);

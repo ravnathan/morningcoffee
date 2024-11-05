@@ -1,35 +1,35 @@
 'use client';
 
-import { Input } from '@/components/inputformikblack';
-import { createCashier } from '@/libs/action/user';
-import { createCashierSchema } from '@/libs/schema';
-import { CashierData } from '@/types/user';
-import { Form, Formik } from 'formik';
-import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import PictureModal from '../../_components/picturemodal';
+import { createCashier } from '@/libs/action/user';
+import { CashierData } from '@/types/user';
+import { toast } from 'react-toastify';
+import { createCashierSchema } from '@/libs/schema';
 
-export default function EmployeeForm({closeModal} : {closeModal: () => void}) {
+
+export default function EmployeeForm({ closeModal }: { closeModal: () => void }) {
   const [openModal, setOpenModal] = useState(false);
   const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const initialValues: CashierData = {
-    username: '',
-    fullname: '',
-    password: '',
-  };
+  const handleCreateCashier = async (values: CashierData) => {
+    if (!dataUrl) {
+      toast.error('Please select an avatar image.');
+      return;
+    }
 
-  const onCreate = async (
-    data: CashierData,
-    dataUrl: string,
-    resetForm: () => void,
-  ) => {
     try {
-      const res = await createCashier(data, dataUrl);
+      const res = await createCashier(values, dataUrl);
       toast.success(res.msg);
-      resetForm();
-      setDataUrl(null);
-      closeModal()
+      setPreviewImage(null);
+      closeModal();
     } catch (error) {
       toast.error(error as string);
     }
@@ -38,39 +38,68 @@ export default function EmployeeForm({closeModal} : {closeModal: () => void}) {
   return (
     <div className="w-full h-full mx-5">
       <Formik
-        initialValues={initialValues}
+        initialValues={{ fullname: '', password: '' }}
         validationSchema={createCashierSchema}
-        onSubmit={(values, { resetForm }) => {
-          if (dataUrl) {
-            onCreate(values, dataUrl, resetForm);
-          } else {
-            toast.error('Please select an avatar image.');
-          }
-        }}
+        onSubmit={handleCreateCashier}
       >
-        {() => (
+        {({ errors, touched }) => (
           <Form>
-            <div className='flex flex-col space-y-44'>
-              <div className=''>
-                <Input name="username" type="string" placeholder="username" />
-                <Input name="fullname" type="string" placeholder="fullname" />
-                <Input name="password" type="password" placeholder="password" />
-                <button
-                  type="button"
-                  className="bg-coffee py-2 px-6 rounded-full text-white "
-                  onClick={() => setOpenModal(true)}
-                >
-                  Portrait
-                </button>
-              </div>
-              <button type="submit" className="p-2 bg-coffee text-white rounded-full">
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Field
+                name="fullname"
+                as={TextField}
+                label="Full Name"
+                variant="outlined"
+                fullWidth
+                error={touched.fullname && Boolean(errors.fullname)}
+                helperText={touched.fullname && errors.fullname}
+              />
+
+              <Field
+                name="password"
+                as={TextField}
+                label="Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+              />
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenModal(true)}
+                sx={{ textTransform: 'none' }}
+              >
+                Upload Portrait
+              </Button>
+            </Box>
+
+            {previewImage && (
+              <Box mt={2}>
+                <Typography>Image Preview:</Typography>
+                <img src={previewImage} alt="Preview" style={{ width: '100px', height: 'auto', marginTop: '8px' }} />
+              </Box>
+            )}
+
+            <Box display="flex" justifyContent="center" pt={4}>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                sx={{ textTransform: 'none' }}
+                type="submit"
+              >
                 Submit
-              </button>
-            </div>
+              </Button>
+            </Box>
+
             {openModal && (
               <PictureModal
                 func={(imageDataUrl: string) => {
                   setDataUrl(imageDataUrl);
+                  setPreviewImage(imageDataUrl); 
                   setOpenModal(false);
                 }}
                 closeModal={() => setOpenModal(false)}

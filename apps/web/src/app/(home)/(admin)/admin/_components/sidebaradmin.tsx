@@ -1,24 +1,30 @@
 'use client';
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { FaFileAlt, FaListAlt, FaDollarSign, FaUserFriends, FaBox, FaSignOutAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { FaFileAlt, FaListAlt, FaDollarSign, FaUserFriends, FaBox, FaSignOutAlt, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 export default function SideBarAdmin() {
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [activePage, setActivePage] = useState('');
 
   const menuItems = [
     {
-      name: "Report",
+      name: 'Report',
       icon: <FaFileAlt />,
+      path: '/report',
       subMenu: [
-        { name: "Transaction History", icon: <FaListAlt /> },
-        { name: "Profit", icon: <FaDollarSign /> },
+        { name: 'Transaction History', icon: <FaListAlt />, path: '/report/transaction-history' },
+        { name: 'Profit', icon: <FaDollarSign />, path: '/report/profit' },
       ],
     },
-    { name: "Employees", icon: <FaUserFriends /> },
-    { name: "Products", icon: <FaBox /> },
+    { name: 'Employees', icon: <FaUserFriends />, path: '/admin/employees' },
+    { name: 'Products', icon: <FaBox />, path: '/admin/products' },
   ];
+
+  useEffect(() => {
+    setActivePage(window.location.pathname);
+  }, []);
 
   return (
     <motion.aside
@@ -34,38 +40,45 @@ export default function SideBarAdmin() {
         {menuItems.map((item, index) => (
           <div key={index}>
             <li
-              onClick={() => item.name === "Report" && setIsReportOpen(!isReportOpen)}
-              className="flex items-center justify-between space-x-4 p-3 rounded-md transition-colors duration-300 hover:bg-coffee hover:text-white cursor-pointer"
+              onClick={() => {
+                if (item.name === 'Report') {
+                  setIsReportOpen(!isReportOpen);
+                } else {
+                  setActivePage(item.path);
+                }
+              }}
+              className={`flex items-center justify-between space-x-4 p-3 rounded-md transition-colors duration-300 cursor-pointer ${
+                activePage === item.path || (item.name === 'Report' && isReportOpen) ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
+              }`}
             >
               <div className="flex items-center space-x-4">
-                <div className="bg-gray-100 rounded-full p-3 transition-colors duration-300 hover:bg-coffee hover:text-white">
-                  {item.icon}
-                </div>
-                <span className="font-semibold hover:text-white">{item.name}</span>
+                <div className="p-3">{item.icon}</div>
+                <span className="font-semibold">{item.name}</span>
               </div>
-              {item.name === "Report" && (
+              {item.name === 'Report' && (
                 <div className="text-gray-500">
                   {isReportOpen ? <FaChevronUp /> : <FaChevronDown />}
                 </div>
               )}
             </li>
-            
-            {item.name === "Report" && isReportOpen && (
+
+            {item.name === 'Report' && isReportOpen && (
               <motion.ul
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
+                animate={{ height: 'auto', opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className="ml-10 space-y-2 overflow-hidden"
               >
                 {item.subMenu!.map((subItem, subIndex) => (
                   <li
                     key={subIndex}
-                    className="flex items-center space-x-3 p-2 pl-3 rounded-md transition-colors duration-300 hover:bg-coffee hover:text-white cursor-pointer"
+                    onClick={() => setActivePage(subItem.path)} // Set active page on click
+                    className={`flex items-center space-x-3 p-2 pl-3 rounded-md transition-colors duration-300 cursor-pointer ${
+                      activePage === subItem.path ? 'bg-coffee text-white' : 'hover:bg-superlightbrown'
+                    }`}
                   >
-                    <div className="text-gray-600 hover:text-white">
-                      {subItem.icon}
-                    </div>
-                    <span className="text-gray-700 hover:text-white">{subItem.name}</span>
+                    <div className="text-black">{subItem.icon}</div>
+                    <span className="text-black">{subItem.name}</span>
                   </li>
                 ))}
               </motion.ul>
@@ -75,12 +88,13 @@ export default function SideBarAdmin() {
       </ul>
       <div className="mt-auto">
         <li
-          className="flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 hover:bg-coffee hover:text-white cursor-pointer"
+          className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 ${
+            activePage === '/logout' ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
+          }`}
+          onClick={() => setActivePage('/logout')}
         >
-          <div className="bg-gray-100 rounded-full p-3 hover:bg-coffee hover:text-white transition-colors duration-300">
-            <FaSignOutAlt />
-          </div>
-          <span className="font-semibold hover:text-white">Logout</span>
+          <div className="p-3">{<FaSignOutAlt />}</div>
+          <span className="font-semibold">Logout</span>
         </li>
       </div>
     </motion.aside>

@@ -87,88 +87,87 @@ export default function ProductList() {
       : products?.products.filter((product) => product.category_name === selectedCategory);
 
   return (
-    
-      <TableContainer component={Paper} sx={{backgroundColor: '#F9F8FB'}}>
-        <FormControl margin="normal" style={{ width: '200px', paddingTop: '8px' }}>
-          {' '}
-          <InputLabel shrink>Filter by Category</InputLabel>
-          <Select value={selectedCategory} onChange={handleCategoryChange} displayEmpty>
-            <MenuItem value="All">All Categories</MenuItem>
-            {categories.map((category) => (
-              <MenuItem key={category.id} value={category.name}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+    <TableContainer component={Paper} sx={{ backgroundColor: '#F9F8FB' }}>
+      <FormControl margin="normal" style={{ width: '200px', paddingTop: '8px' }}>
+        {' '}
+        <InputLabel shrink>Filter by Category</InputLabel>
+        <Select value={selectedCategory} onChange={handleCategoryChange} displayEmpty>
+          <MenuItem value="All">All Categories</MenuItem>
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.name}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-        <Table>
-          <TableHead>
-            <TableRow
-              sx={{
-                borderTop: '2px solid black',
-                borderBottom: '2px solid black',
-              }}
-            >
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Name</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Category</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Medium Price</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Small</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Medium</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Large</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Stock</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Stock Iced</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Description</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Description Iced</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Image Hot</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Image Iced</TableCell>
-              <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Actions</TableCell>
+      <Table>
+        <TableHead>
+          <TableRow
+            sx={{
+              borderTop: '2px solid black',
+              borderBottom: '2px solid black',
+            }}
+          >
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Name</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Category</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Medium Price</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Small</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Medium</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Iced Large</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Stock</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Stock Iced</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Description</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Description Iced</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Image 1</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Image 2</TableCell>
+            <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: '600' }}>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {filteredProducts?.map((product, index) => (
+            <TableRow key={index} sx={{ borderBottom: '1px solid #e0e0e0' }}>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.name}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.category_name}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.medium == null || product.medium === 0 ? '-' : formatToRupiah(product.medium)}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.iced_small == null || product.iced_small === 0 ? '-' : formatToRupiah(product.iced_small)}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.iced_medium == null || product.iced_medium === 0 ? '-' : formatToRupiah(product.iced_medium)}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.iced_large == null || product.iced_large === 0 ? '-' : formatToRupiah(product.iced_large)}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.stock}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.stock_iced ?? '-'}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.description}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.description_iced ?? '-'}</TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.image_1 ? <Image src={product.image_1} alt={`${product.name} hot`} width={50} height={50} /> : '-'}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0' }}>
+                {product.image_2 ? <Image src={product.image_2} alt={`${product.name} iced`} width={50} height={50} /> : '-'}
+              </TableCell>
+              <TableCell sx={{ border: '1px solid #e0e0e0', textAlign: 'center' }}>
+                <DeleteIcon sx={{ cursor: 'pointer', color: 'red' }} onClick={() => handleDelete(product.id)} />
+              </TableCell>
             </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {filteredProducts?.map((product, index) => (
-              <TableRow key={index} sx={{ borderBottom: '1px solid #e0e0e0' }}>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.name}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.category_name}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.medium == null || product.medium === 0 ? '-' : formatToRupiah(product.medium)}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.iced_small == null || product.iced_small === 0 ? '-' : formatToRupiah(product.iced_small)}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.iced_medium == null || product.iced_medium === 0 ? '-' : formatToRupiah(product.iced_medium)}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.iced_large == null || product.iced_large === 0 ? '-' : formatToRupiah(product.iced_large)}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.stock}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.stock_iced ?? '-'}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.description}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>{product.description_iced ?? '-'}</TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.image_hot ? <Image src={product.image_hot} alt={`${product.name} hot`} width={50} height={50} /> : '-'}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0' }}>
-                  {product.image_iced ? <Image src={product.image_iced} alt={`${product.name} iced`} width={50} height={50} /> : '-'}
-                </TableCell>
-                <TableCell sx={{ border: '1px solid #e0e0e0', textAlign: 'center' }}>
-                  <DeleteIcon sx={{ cursor: 'pointer', color: 'red' }} onClick={() => handleDelete(product.id)} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        {deleteConfirmation && (
-          <ConfirmationModal
-            isOpen={deleteConfirmation}
-            onClose={() => setDeleteConfirmation(false)}
-            onConfirm={confirmDeleteProd}
-            header="Confirm Deletion"
-            message="Are you sure you want to delete this product?"
-          />
-        )}
-      </TableContainer>
+          ))}
+        </TableBody>
+      </Table>
+      {deleteConfirmation && (
+        <ConfirmationModal
+          isOpen={deleteConfirmation}
+          onClose={() => setDeleteConfirmation(false)}
+          onConfirm={confirmDeleteProd}
+          header="Confirm Deletion"
+          message="Are you sure you want to delete this product?"
+        />
+      )}
+    </TableContainer>
   );
 }

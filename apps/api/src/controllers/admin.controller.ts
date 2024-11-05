@@ -31,8 +31,14 @@ export class AdminController {
   async createCashier(req: Request, res: Response) {
     try {
       const { password, ...data } = req.body;
+      const existingCashiersCount = await prisma.user.count({
+        where: { role: 'cashier' },
+      });
+
+      const newUsername = `cashier${existingCashiersCount + 1}`;
+
       const existingCashier = await prisma.user.findUnique({
-        where: { username: req.body.username },
+        where: { username: newUsername },
       });
 
       if (existingCashier) throw 'User has already existed';
@@ -45,6 +51,7 @@ export class AdminController {
       const cashier = await prisma.user.create({
         data: {
           ...data,
+          username: newUsername,
           password: hashedPassword,
           role: 'cashier',
           avatar,
@@ -64,24 +71,17 @@ export class AdminController {
   async editCashier(req: Request, res: Response) {
     try {
       const { password, ...data } = req.body;
-
-      // Find the cashier by username
       const cashierData = await prisma.user.findUnique({
         where: { username: data.username },
       });
 
       if (!cashierData) throw 'No user found';
-
-      // Prepare the update data
       const updateData: any = { ...data };
-
-      // Only hash the password if it's provided
       if (password) {
         const hashedPassword = await hashData(password);
         updateData.password = hashedPassword;
       }
 
-      // Update the user record
       const newData = await prisma.user.update({
         where: { username: cashierData.username },
         data: updateData,
@@ -108,7 +108,7 @@ export class AdminController {
         msg: 'Cashier data has been deleted',
       });
     } catch (error) {
-      responseError(res, error)
+      responseError(res, error);
     }
   }
 }

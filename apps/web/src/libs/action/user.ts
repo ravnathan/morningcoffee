@@ -30,7 +30,6 @@ export const createCashier = async (data: CashierData, dataUrl: string) => {
   const token = Cookies.get('token');
   const formData = new FormData();
   const portraitImage = dataURLtoFile(dataUrl, 'cashier-avatar.png');
-  formData.append('username', data.username);
   formData.append('fullname', data.fullname);
   formData.append('password', data.password);
   formData.append('avatar', portraitImage);

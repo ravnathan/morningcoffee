@@ -1,10 +1,11 @@
+import { hashData } from '@/helpers/hashData';
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
 import { Request, Response } from 'express';
 
 export class TransactionController {
   async createTransaction(req: Request, res: Response) {
-    const { items } = req.body;
+    const { items, debit_info } = req.body;
 
     try {
       let totalPrice = 0;
@@ -21,16 +22,14 @@ export class TransactionController {
           }
 
           const price =
-            item.variant === 'iced_small' ? product.iced_small :
-            item.variant === 'iced_medium' ? product.iced_medium :
-            item.variant === 'iced_large' ? product.iced_large :
-            product.medium ?? 0; 
+            item.variant === 'S' ? product.iced_small :
+            item.variant === 'M' ? product.iced_medium :
+            item.variant === 'L' ? product.iced_large :
+            product.medium
 
-          if (price === null) {
-            throw new Error(`Price for variant ${item.variant} is not set for product ID ${item.product_id}`);
-          }
+       
 
-          const itemTotalPrice = price * item.qty;
+          const itemTotalPrice = price! * item.qty;
           totalPrice += itemTotalPrice;
 
           return {
@@ -38,7 +37,7 @@ export class TransactionController {
               connect: { id: item.product_id },
             },
             qty: item.qty,
-            variant: item.variant,
+            variant: (item.variant ? item.variant : 'normal'),
             price,
             total_price: itemTotalPrice,
           };
@@ -48,6 +47,8 @@ export class TransactionController {
       const transaction = await prisma.transaction.create({
         data: {
           cashier_on_duty: req.user.id,
+          payment_type: req.body.payment_type,
+          debit_info: debit_info ? await hashData(debit_info) : null,
           total_price: totalPrice,
           TransactionItem: {
             create: transactionItemsData,
@@ -63,6 +64,8 @@ export class TransactionController {
       });
 
       res.status(201).send({
+        status: 'ok',
+        msg: 'Transaction Success',
         transaction,
       });
     } catch (error) {

@@ -40,15 +40,15 @@ CREATE TABLE `Product` (
     `iced_small` INTEGER NULL,
     `iced_medium` INTEGER NULL,
     `iced_large` INTEGER NULL,
-    `image_iced` VARCHAR(191) NULL,
-    `image_hot` VARCHAR(191) NOT NULL,
+    `image_2` VARCHAR(191) NULL,
+    `image_1` VARCHAR(191) NOT NULL,
     `stock` INTEGER NULL,
     `stock_iced` INTEGER NULL,
     `description` TEXT NULL,
     `description_iced` TEXT NULL,
     `is_deleted` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `uodated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Product_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -59,6 +59,8 @@ CREATE TABLE `Transaction` (
     `id` VARCHAR(191) NOT NULL,
     `total_price` DOUBLE NOT NULL,
     `cashier_on_duty` VARCHAR(191) NOT NULL,
+    `payment_type` ENUM('cash', 'debit') NOT NULL,
+    `debit_info` VARCHAR(191) NULL,
     `transaction_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

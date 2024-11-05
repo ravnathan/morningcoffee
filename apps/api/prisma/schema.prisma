@@ -72,16 +72,16 @@ model Product {
   iced_small       Int?
   iced_medium      Int?
   iced_large       Int?
-  image_iced       String?
-  image_hot        String
+  image_2          String?
+  image_1          String
   stock            Int?
   stock_iced       Int?
-  description      String?  @db.Text
+  description      String? @db.Text
   description_iced String? @db.Text
   is_deleted       Boolean @default(false)
 
   created_at      DateTime          @default(now())
-  uodated_at      DateTime          @default(now())
+  updated_at      DateTime          @default(now())
   category        Category          @relation(fields: [category_name], references: [name])
   TransactionItem TransactionItem[]
 }
@@ -90,6 +90,8 @@ model Transaction {
   id               String            @id @default(cuid())
   total_price      Float
   cashier_on_duty  String
+  payment_type     PaymentMethod
+  debit_info       String?
   transaction_date DateTime          @default(now())
   updated_at       DateTime          @default(now())
   TransactionItem  TransactionItem[]
