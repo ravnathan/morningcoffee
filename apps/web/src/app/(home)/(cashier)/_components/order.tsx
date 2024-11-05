@@ -6,6 +6,8 @@ import CashierStatus from './cashierstatus';
 import { FaMoneyBillWave, FaCreditCard } from 'react-icons/fa';
 import OrderTemplate from './ordertemplate';
 import { OrderItem } from '../page';
+import { useOrderStore } from '@/zustand/orderstore';
+import { formatToRupiah } from '@/libs/formatrupiah';
 
 interface OrderProps {
   items: OrderItem[];
@@ -19,6 +21,8 @@ export default function Order({ items, removeFromOrder }: OrderProps) {
   const handleSelectMethod = (method: SetStateAction<string>) => {
     setSelectedMethod(method);
   };
+
+  const totalPrice = useOrderStore((state) => state.totalPrice);
 
   return (
     <div className="relative">
@@ -66,6 +70,10 @@ export default function Order({ items, removeFromOrder }: OrderProps) {
           </div>
           <div></div>
           <div className="w-80 mx-auto">
+          <div className="w-full flex justify-between font-semibold text-lg py-10">
+            <p>Total Price:</p>
+            <p>{formatToRupiah(totalPrice)}</p>
+          </div>
             <div className="text-xl font-semibold mb-4">Payment Method</div>
             <div className="flex justify-evenly mb-6">
               <button

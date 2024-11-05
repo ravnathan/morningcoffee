@@ -4,15 +4,17 @@ import { Request, Response } from 'express';
 
 export class TransactionController {
   async createTransaction(req: Request, res: Response) {
-    const { cashier_on_duty, items } = req.body;
+    const { items } = req.body;
 
     try {
       let totalPrice = 0;
+      
       const transactionItemsData = await Promise.all(
         items.map(async (item: { product_id: string; qty: number; variant: string }) => {
           const product = await prisma.product.findUnique({
             where: { id: item.product_id },
           });
+          console.log(product);
           
           if (!product) {
             throw new Error(`Product with ID ${item.product_id} not found`);
@@ -23,9 +25,6 @@ export class TransactionController {
             item.variant === 'iced_medium' ? product.iced_medium :
             item.variant === 'iced_large' ? product.iced_large :
             product.medium ?? 0; 
-
-            console.log(price);
-            
 
           if (price === null) {
             throw new Error(`Price for variant ${item.variant} is not set for product ID ${item.product_id}`);
@@ -48,7 +47,7 @@ export class TransactionController {
 
       const transaction = await prisma.transaction.create({
         data: {
-          cashier_on_duty,
+          cashier_on_duty: req.user.id,
           total_price: totalPrice,
           TransactionItem: {
             create: transactionItemsData,

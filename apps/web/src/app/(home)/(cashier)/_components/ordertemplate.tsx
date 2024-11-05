@@ -1,7 +1,10 @@
+'use client'
+
 import { capitalizeFirstLetter } from '@/libs/formatcapital';
 import { formatToRupiah } from '@/libs/formatrupiah';
+import { useOrderStore } from '@/zustand/orderstore';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
 interface TemplateProps {
@@ -17,6 +20,15 @@ interface TemplateProps {
 
 export default function OrderTemplate({ img, id, name, type, size, price, hot_iced_variant, removeFromOrder }: TemplateProps) {
   const [quantity, setQuantity] = useState(1); 
+  const addProductPrice = useOrderStore((state) => state.addProductPrice);
+  const removeProductPrice = useOrderStore((state) => state.removeProductPrice);
+
+  useEffect(() => {
+    addProductPrice(price, quantity);
+    return () => {
+      removeProductPrice(price, quantity);
+    };
+  }, [quantity]); 
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -25,6 +37,9 @@ export default function OrderTemplate({ img, id, name, type, size, price, hot_ic
   const handleDecrement = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); 
   };
+
+  const totalPrice = price * quantity
+
 
   return (
     <div className="bg-whiteish w-[380px] h-20 flex items-center justify-between px-4 rounded-lg shadow-sm gap-3">
@@ -45,7 +60,7 @@ export default function OrderTemplate({ img, id, name, type, size, price, hot_ic
           </button>
         </div>
       </div>
-      <div className="text-sm font-semibold w-20">{formatToRupiah(price * quantity)}</div>
+      <div className="text-sm font-semibold w-20">{formatToRupiah(totalPrice)}</div>
       <button 
         onClick={() => removeFromOrder(id)}
         className="text-red-500 hover:text-red-700 p-2"
