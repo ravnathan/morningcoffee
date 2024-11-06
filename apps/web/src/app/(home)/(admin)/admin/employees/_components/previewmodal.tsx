@@ -1,7 +1,6 @@
-
 import Image from 'next/image';
 import React from 'react';
-import CloseIcon from '../../_components/closeicon';
+import CloseIcon from '../../_components/CloseIcon';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -26,7 +25,7 @@ export default function PreviewModal({ closeModal, children }: ModalProps) {
             <span className="sr-only">Close menu</span>
             <CloseIcon />
           </button>
-          <div className='p-4'>
+          <div className="p-4">
             <Image src={`${children}`} width={300} height={300} alt="" />
           </div>
         </div>

@@ -1,7 +1,8 @@
 import { CashierFetch } from '@/types/user';
 import { useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import PreviewModal from './previewmodal';
+import PreviewModal from './PreviewModal';
+
 
 interface CashierTemplate extends CashierFetch {
   idx: number;

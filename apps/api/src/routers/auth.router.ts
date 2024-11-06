@@ -15,8 +15,8 @@ export class AuthRouter {
     }
 
     private initialization(): void {
+        this.router.get('/user', this.authMiddleware.verifyToken, this.authController.userData)
         this.router.post('/login', this.authController.userLogin)
-        this.router.post('/createcashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.authController.createCashier)
     }
 
     getRouter(): Router {

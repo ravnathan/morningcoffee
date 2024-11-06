@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import { boong } from '@/libs/fonts';
-import ProductList from './_components/productlist';
-import CreateProductCat from './_components/createprodcat';
-import AppWrapper from './_components/productwrapper';
+import ProductList from './_components/ProductList';
+import CreateProductCat from './_components/CreateProdCat';
+import AppWrapper from './_components/ProductWrapper';
 
 export default function Products() {
   return (
@@ -12,7 +12,7 @@ export default function Products() {
         <h1 className={`text-7xl ${boong.className} text-coffee pb-10`}>Products</h1>
         <CreateProductCat />
       </div>
-      <div className='pt-10'>
+      <div className="pt-10">
         <AppWrapper>
           <ProductList />
         </AppWrapper>

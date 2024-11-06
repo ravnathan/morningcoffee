@@ -20,9 +20,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import PictureModal from '../../../_components/picturemodal';
 import { dataURLtoFile } from '@/libs/urltofileconvert';
 import { navigate } from '@/libs/action/server';
+import PictureModal from '../../../_components/PictureModal';
 
 export default function ProductForm() {
   const [name, setName] = useState<string>('');

@@ -26,3 +26,17 @@ export interface CashierFetch {
     role: string
     avatar: string
 }
+
+export interface shiftInterface {
+  shift: string
+  value: number
+}
+
+export interface CashierStatus {
+  user: {
+    username: string
+    fullname: string
+    role: string
+    avatar: string
+  }
+}

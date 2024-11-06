@@ -84,7 +84,7 @@ export default function ProductCardTemplate({
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <Image src={currentImage} width={150} height={100} style={{ objectFit: 'cover' }} className="w-[150px] h-[150px]" alt={name} />
+          <Image src={currentImage} width={150} height={150} style={{ objectFit: 'cover' }} className="w-[150px] h-[150px]" alt={name} />
           <div className="flex flex-col">
             <h3 className="font-semibold text-lg h-[60px]">{name}</h3>
             <p className="text-sm text-gray-600 h-[60px] overflow-hidden">{getDescription()}</p>

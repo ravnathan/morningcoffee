@@ -28,14 +28,6 @@ export default function OrderTemplate({ img, id, name, type, size, price, hot_ic
   const addProductInfo = useProductInfoStore((state) => state.addProductInfo); 
   const removeProductInfo = useProductInfoStore((state) => state.removeProductInfo); 
 
-  // const productInfo = useProductInfoStore((state) => state.items); 
-
- 
-  // useEffect(() => {
-  //   console.log(productInfo); 
-  // }, [productInfo]);
-
-
   useEffect(() => {
     addProductPrice(price, quantity);
     addProductInfo(id, prodID, quantity, size); 

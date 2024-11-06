@@ -6,9 +6,9 @@ import { CategoryForm } from '@/types/category';
 import { createCategory } from '@/libs/action/category';
 import { toast } from 'react-toastify';
 import { dataURLtoFile } from '@/libs/urltofileconvert';
-import PictureModal from '../../_components/picturemodal';
+import PictureModal from '../../_components/PictureModal';
 
-export default function CreateCategory({closeModal} : {closeModal: () => void}) {
+export default function CreateCategory({ closeModal }: { closeModal: () => void }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [coldVariant, setColdVariant] = useState(false);
@@ -65,14 +65,14 @@ export default function CreateCategory({closeModal} : {closeModal: () => void}) 
       toast.success(res.msg);
       setUrl(null);
       setPreviewImage(null);
-      closeModal()
+      closeModal();
     } catch (error) {
       toast.error('Failed creating category');
     }
   };
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <Box p={4}>
         <Typography variant="h6">Create Category</Typography>
         <TextField label="Category Name" value={name} onChange={handleNameChange} variant="outlined" fullWidth margin="normal" />

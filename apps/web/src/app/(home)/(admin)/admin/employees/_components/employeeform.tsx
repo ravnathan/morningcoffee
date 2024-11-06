@@ -7,12 +7,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import PictureModal from '../../_components/picturemodal';
 import { createCashier } from '@/libs/action/user';
 import { CashierData } from '@/types/user';
 import { toast } from 'react-toastify';
 import { createCashierSchema } from '@/libs/schema';
-
+import PictureModal from '../../_components/PictureModal';
 
 export default function EmployeeForm({ closeModal }: { closeModal: () => void }) {
   const [openModal, setOpenModal] = useState(false);
@@ -37,11 +36,7 @@ export default function EmployeeForm({ closeModal }: { closeModal: () => void })
 
   return (
     <div className="w-full h-full mx-5">
-      <Formik
-        initialValues={{ fullname: '', password: '' }}
-        validationSchema={createCashierSchema}
-        onSubmit={handleCreateCashier}
-      >
+      <Formik initialValues={{ fullname: '', password: '' }} validationSchema={createCashierSchema} onSubmit={handleCreateCashier}>
         {({ errors, touched }) => (
           <Form>
             <Box display="flex" flexDirection="column" gap={2}>
@@ -66,12 +61,7 @@ export default function EmployeeForm({ closeModal }: { closeModal: () => void })
                 helperText={touched.password && errors.password}
               />
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenModal(true)}
-                sx={{ textTransform: 'none' }}
-              >
+              <Button variant="contained" color="primary" onClick={() => setOpenModal(true)} sx={{ textTransform: 'none' }}>
                 Upload Portrait
               </Button>
             </Box>
@@ -84,13 +74,7 @@ export default function EmployeeForm({ closeModal }: { closeModal: () => void })
             )}
 
             <Box display="flex" justifyContent="center" pt={4}>
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                sx={{ textTransform: 'none' }}
-                type="submit"
-              >
+              <Button variant="contained" color="secondary" fullWidth sx={{ textTransform: 'none' }} type="submit">
                 Submit
               </Button>
             </Box>
@@ -99,7 +83,7 @@ export default function EmployeeForm({ closeModal }: { closeModal: () => void })
               <PictureModal
                 func={(imageDataUrl: string) => {
                   setDataUrl(imageDataUrl);
-                  setPreviewImage(imageDataUrl); 
+                  setPreviewImage(imageDataUrl);
                   setOpenModal(false);
                 }}
                 closeModal={() => setOpenModal(false)}

@@ -15,6 +15,7 @@ import { ProductRouter } from './routers/product.router';
 import { CategoryRouter } from './routers/categories.router';
 import path from 'path'
 import { TransactionRouter } from './routers/transaction.router';
+import { CashierShiftRouter } from './routers/cashiershift.router';
 
 export default class App {
   private app: Express;
@@ -62,6 +63,7 @@ export default class App {
     const productRouter = new ProductRouter()
     const categoryRouter = new CategoryRouter()
     const transactionRouter = new TransactionRouter()
+    const cashierShiftRouter = new CashierShiftRouter()
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Welcome to Morning Coffee`);
@@ -72,6 +74,7 @@ export default class App {
     this.app.use('/api/product', productRouter.getRouter())
     this.app.use('/api/category', categoryRouter.getRouter())
     this.app.use('/api/transaction', transactionRouter.getRouter())
+    this.app.use('/api/shift', cashierShiftRouter.getRouter())
   }
 
   public start(): void {

@@ -1,6 +1,6 @@
 import React from 'react';
-import CloseIcon from './closeicon';
-import ImageCropper from './imagecropper';
+import CloseIcon from './CloseIcon';
+import ImageCropper from './ImageCropper';
 
 interface ModalProps {
   func: (data: string) => void;
@@ -9,12 +9,7 @@ interface ModalProps {
 
 export default function PictureModal({ closeModal, func }: ModalProps) {
   return (
-    <div
-      className="relative z-10"
-      aria-labelledby="crop-image-dialog"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="relative z-10" aria-labelledby="crop-image-dialog" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black bg-opacity-10 transition-all backdrop-blur-sm"></div>
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full justify-center px-2 py-12 text-center">
@@ -28,10 +23,7 @@ export default function PictureModal({ closeModal, func }: ModalProps) {
                 <span className="sr-only">Close menu</span>
                 <CloseIcon />
               </button>
-              <ImageCropper
-                picture={func}
-                closeModal={closeModal}
-              />
+              <ImageCropper picture={func} closeModal={closeModal} />
             </div>
           </div>
         </div>

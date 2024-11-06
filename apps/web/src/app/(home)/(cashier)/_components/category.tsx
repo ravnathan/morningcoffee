@@ -1,9 +1,8 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import CategoryTemplate from "./categorytemplate"
-import { CategoryInterface } from "@/types/home"
 import { getCategories } from "@/libs/action/home"
+import CategoryTemplate from "./CategoryTemplate";
 
 export default function Category() {
     const [data, setData] = useState<any>(null);

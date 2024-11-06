@@ -16,6 +16,7 @@ export class TransactionRouter {
 
     private initialization(): void {
         this.router.get('/', this.authMiddleware.verifyToken, this.transactionController.getAllTransactions)
+        this.router.get('/by-date', this.authMiddleware.verifyToken, this.transactionController.getAllTransactionsByDate); 
         this.router.post('/', this.authMiddleware.verifyToken, this.transactionController.createTransaction)
     }
 

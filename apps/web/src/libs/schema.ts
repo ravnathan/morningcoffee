@@ -60,5 +60,9 @@ export const debitCardSchema = Yup.object().shape({
     .matches(/^\d{16}$/, 'Debit card must be 16 digits long'),
 });
 
-
-
+export const shiftStartSchema = Yup.object().shape({
+  value: Yup.number()
+    .typeError('Value must be a number')
+    .positive('Value must be a positive number')
+    .required('Value is required'),
+});

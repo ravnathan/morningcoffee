@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import DailyChart from "./_components/dialychart";
+import DailyChart from './_components/DialyChart';
 
 export default function AdminPage() {
-    return (
-        <div>
-            <DailyChart/>
-        </div>
-    )
+  return (
+    <div>
+      <DailyChart />
+    </div>
+  );
 }

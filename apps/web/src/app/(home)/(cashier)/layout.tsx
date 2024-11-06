@@ -1,4 +1,4 @@
-import SideBarMenu from "./_components/sidebarmenu";
+import SideBarMenu from "./_components/SidebarMenu";
 
 export default function CashierLayout({ children }: { children: React.ReactNode }) {
     return (

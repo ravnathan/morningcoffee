@@ -1,13 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Category from './_components/category';
-import Order from './_components/order';
-import SearchBar from './_components/searchbar';
 import { ProductFetch } from '@/types/product';
 import { getProduct } from '@/libs/action/products';
 import LoadingScreen from '@/components/loadingcomp';
-import ProductCardTemplate from './_components/producttemplate';
+import Order from './_components/Order';
+import SearchBar from './_components/SearchBar';
+import Category from './_components/Category';
+import ProductCardTemplate from './_components/ProductTemplate';
+import { FaSignOutAlt } from 'react-icons/fa';
+import ShiftModal from './_components/ShiftModal';
+import EndShift from './_components/EndShift';
 
 export interface OrderItem {
   id: string;
@@ -25,6 +28,7 @@ export default function Home() {
   const [data, setData] = useState<ProductFetch | null>(null);
   const [loading, setLoading] = useState(true);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const [modalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +74,12 @@ export default function Home() {
   return (
     <div>
       <Order items={orderItems} removeFromOrder={removeFromOrder} clearOrderItems={clearOrderItems} />
+      <button className="absolute w-14 h-14 right-3 z-40 top-6"
+      onClick={() => setModalOpen(true)}>
+        <div className="text-lg">
+          <FaSignOutAlt />
+        </div>
+      </button>
       <div className="mr-[400px]">
         <SearchBar />
         <Category />
@@ -95,6 +105,9 @@ export default function Home() {
           ))}
         </div>
       </div>
+      {modalOpen && (
+        <ShiftModal children={<EndShift/>} closeModal={() => setModalOpen(false)}/>
+      )}
     </div>
   );
 }

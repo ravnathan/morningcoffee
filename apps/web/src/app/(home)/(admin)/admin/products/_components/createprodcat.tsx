@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import CategoryModal from './categorymodal';
-import CreateCategory from './categoryform';
-import AppWrapper from './productwrapper';
 import Link from 'next/link';
+import CategoryModal from './CategoryModal';
+import AppWrapper from './ProductWrapper';
+import CreateCategory from './CategoryForm';
 
 export default function CreateProductCat() {
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function CreateProductCat() {
           closeModal={() => setCategoryModalOpen(false)}
           children={
             <AppWrapper>
-              <CreateCategory closeModal={() => setCategoryModalOpen(false)}/>
+              <CreateCategory closeModal={() => setCategoryModalOpen(false)} />
             </AppWrapper>
           }
         />

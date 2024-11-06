@@ -10,14 +10,6 @@ export class AdminController {
     try {
       const cashiersData = await prisma.user.findMany({
         where: { role: 'cashier' },
-        // select: {
-        //   username: true,
-        //   fullname: true,
-        //   role: true,
-        //   avatar: true,
-        //   created_at: true,
-        //   updated_at: true
-        // }
       });
 
       return res.status(200).send({

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import EmployeeModal from './employeemodal';
-import EmployeeForm from './employeeform';
-import AppWrapper from '../../products/_components/productwrapper';
+import EmployeeModal from './EmployeeModal';
+import AppWrapper from '../../products/_components/ProductWrapper';
+import EmployeeForm from './EmployeeForm';
 
 export default function CreateEmployee() {
   const [employeeModal, setEmployeeModal] = useState(false);

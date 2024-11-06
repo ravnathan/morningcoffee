@@ -32,21 +32,14 @@ export class AuthController {
     }
   }
 
-  async createCashier(req: Request, res: Response) {
+  async userData(req: Request, res: Response) {
     try {
-      const hashedPass = await hashData(req.body.password);
-      const cashierData = await prisma.user.create({
-        data: {
-          ...req.body,
-          hashedPass,
-          role: 'cashier',
-        },
+      const user = await prisma.user.findUnique({
+        where: { id: req.user.id },
       });
 
       return res.status(200).send({
-        status: 'ok',
-        msg: 'Cashier data created',
-        cashierData,
+        user,
       });
     } catch (error) {
       responseError(res, error);

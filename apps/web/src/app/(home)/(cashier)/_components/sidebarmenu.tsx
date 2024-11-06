@@ -3,19 +3,19 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaHome, FaHistory, FaSignOutAlt } from 'react-icons/fa';
+import Link from 'next/link';
+
 
 export default function SideBarMenu() {
-  const [activeItem, setActiveItem] = useState('/');
+  const [activePage, setActivePage] = useState('');
 
   useEffect(() => {
-    setActiveItem(window.location.pathname);
+    setActivePage(window.location.pathname);
   }, []);
 
-  const menuItems = [
-    { name: 'Home', icon: <FaHome />, path: '/' },
-    { name: 'History', icon: <FaHistory />, path: '/history' },
-    { name: 'Logout', icon: <FaSignOutAlt />, path: '/logout' },
-  ];
+  const handleItemClick = (path: string) => {
+    setActivePage(path);
+  };
 
   return (
     <motion.aside
@@ -27,30 +27,34 @@ export default function SideBarMenu() {
       <div className="flex items-center justify-center py-6">
         <Image src={'/images/logo/logo.png'} width={100} height={100} alt="Logo" />
       </div>
-      <ul className="space-y-16 mt-40">
-        {menuItems.slice(0, 2).map((item, index) => (
-          <li
-            key={index}
-            className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 ${
-              activeItem === item.path ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
+      <div className="flex flex-col space-y-16 mt-40">
+        <Link href="/">
+          <div
+            onClick={() => handleItemClick('/')}
+            className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 cursor-pointer ${
+              activePage === '/' ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
             }`}
-            onClick={() => setActiveItem(item.path)}
           >
-            <div className="p-3">{item.icon}</div>
-            <span className="font-semibold">{item.name}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-auto">
-        <li
-          className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 ${
-            activeItem === menuItems[2].path ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
-          }`}
-          onClick={() => setActiveItem(menuItems[2].path)}
-        >
-          <div className="p-3">{menuItems[2].icon}</div>
-          <span className="font-semibold">{menuItems[2].name}</span>
-        </li>
+            <div className="p-3">
+              <FaHome />
+            </div>
+            <span className="font-semibold">Home</span>
+          </div>
+        </Link>
+
+        <Link href="/history">
+          <div  
+            onClick={() => handleItemClick('/history')}
+            className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 cursor-pointer ${
+              activePage === '/history' ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
+            }`}
+          >
+            <div className="p-3">
+              <FaHistory />
+            </div>
+            <span className="font-semibold">History</span>
+          </div>
+        </Link>
       </div>
     </motion.aside>
   );

@@ -1,10 +1,8 @@
 'use client';
 import { motion } from 'framer-motion';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import CashierStatus from './cashierstatus';
 import { FaMoneyBillWave, FaCreditCard } from 'react-icons/fa';
-import OrderTemplate from './ordertemplate';
 import { OrderItem } from '../page';
 import { usePriceStore } from '@/zustand/pricestore';
 import { formatToRupiah } from '@/libs/formatrupiah';
@@ -12,6 +10,8 @@ import { ProductInfoStore } from '@/types/transaction';
 import { transactionProcess } from '@/libs/action/transaction';
 import { toast } from 'react-toastify';
 import { useProductInfoStore } from '@/zustand/productinfostore';
+import CashierStatus from './CashierStatus';
+import OrderTemplate from './OrderTemplate';
 
 interface OrderProps {
   items: OrderItem[];
@@ -22,37 +22,54 @@ interface OrderProps {
 export default function Order({ items, removeFromOrder, clearOrderItems }: OrderProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState('cash');
-  const [debitInfo, setDebitInfo] = useState('');
   const [rawDebitInfo, setRawDebitInfo] = useState('');
+  const [cashReceived, setCashReceived] = useState<number | null>(null);
 
   const handleSelectMethod = (method: SetStateAction<string>) => {
     setSelectedMethod(method);
+    if (method === 'cash') {
+      setRawDebitInfo('');
+    } else if (method === 'debit') {
+      setCashReceived(null);
+    }
   };
-
-
 
   const totalPrice = usePriceStore((state) => state.totalPrice);
   const productInfo = useProductInfoStore((state) => state.items);
   const resetProductInfo = useProductInfoStore((state) => state.resetProductInfo);
+
   const formatDebitInfo = (value: string) => {
     const cleanValue = value.replace(/\D/g, '');
     const formattedValue = cleanValue.replace(/(\d{4})(?=\d)/g, '$1-');
     return formattedValue;
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value.replace(/[^0-9]/g, ''); 
+  const numericValue = parseFloat(value);
+
+  if (!isNaN(numericValue)) {
+    setCashReceived(numericValue);
+  } else {
+    setCashReceived(null);
+  }
+};
+
   const handleDebitInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
     const cleanInput = inputValue.replace(/-/g, '');
-    
+
     if (cleanInput.length <= 16) {
-      setRawDebitInfo(cleanInput); 
+      setRawDebitInfo(cleanInput);
     }
   };
 
-  console.log(rawDebitInfo);
-  
   const onCreateTransaction = async () => {
+    if (productInfo.length === 0) {
+      toast.error('No items to process in the transaction');
+      return;
+    }
     try {
       const data: ProductInfoStore = {
         items: productInfo.map((item) => ({
@@ -67,6 +84,8 @@ export default function Order({ items, removeFromOrder, clearOrderItems }: Order
       toast.success(res.msg);
       resetProductInfo();
       clearOrderItems();
+      setCashReceived(null);
+      setRawDebitInfo('');
     } catch (error) {
       toast.error('Transaction Failed');
     }
@@ -96,8 +115,9 @@ export default function Order({ items, removeFromOrder, clearOrderItems }: Order
         >
           {isExpanded ? <FaArrowRight size={20} /> : <FaArrowLeft size={20} />}
         </motion.button>
-
-        <CashierStatus />
+        <div className="pb-8">
+          <CashierStatus />
+        </div>
         <div className="flex items-center flex-col">
           <div className="h-[400px] overflow-y-auto">
             <div className="flex flex-wrap gap-2">
@@ -120,10 +140,29 @@ export default function Order({ items, removeFromOrder, clearOrderItems }: Order
           </div>
           <div></div>
           <div className="w-80 mx-auto">
-            <div className="w-full flex justify-between font-semibold text-lg py-10">
-              <p>Total Price:</p>
-              <p>{formatToRupiah(totalPrice)}</p>
+            <div className="py-6 ">
+              <div className="h-6">
+                {cashReceived !== null && (
+                  <div className="w-full flex justify-between font-semibold">
+                    <p>Money Received:</p>
+                    <p>{formatToRupiah(cashReceived!)}</p>
+                  </div>
+                )}
+              </div>
+              <div className="h-6 w-full flex justify-between font-semibold">
+                <p>Total Price:</p>
+                <p>{formatToRupiah(totalPrice)}</p>
+              </div>
+              <div className='h-6 border-t-2'>
+                {cashReceived !== null && cashReceived > totalPrice && (
+                  <div className=" w-full flex justify-between font-semibold">
+                    <p>Change:</p>
+                    <p>{formatToRupiah(cashReceived - totalPrice)}</p>
+                  </div>
+                )}
+              </div>
             </div>
+
             <div className="text-xl font-semibold mb-4">Payment Method</div>
             <div className="flex justify-evenly mb-6">
               <button
@@ -148,19 +187,31 @@ export default function Order({ items, removeFromOrder, clearOrderItems }: Order
             <div className="mb-4 h-12">
               {' '}
               {selectedMethod === 'debit' && (
-                 <input
-                 type="text"
-                 placeholder="Enter Debit Info"
-                 value={formatDebitInfo(rawDebitInfo)}
-                 onChange={handleDebitInfoChange}
-                 className="w-full p-2 border border-gray-300 rounded-lg"
-               />
+                <input
+                  type="text"
+                  placeholder="Enter Debit Info"
+                  value={formatDebitInfo(rawDebitInfo)}
+                  onChange={handleDebitInfoChange}
+                  className="w-full p-2 border border-coffee rounded-lg"
+                />
+              )}
+              {selectedMethod === 'cash' && (
+                <input
+                  type="number"
+                  placeholder="Enter received amount"
+                  value={cashReceived !== null ? cashReceived : ''}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-coffee rounded-lg"
+                />
               )}
             </div>
             <button
-              className={`w-full bg-coffee text-white text-lg py-4 rounded-lg font-semibold transition-opacity duration-300 ${selectedMethod === 'debit' && rawDebitInfo.length !== 16 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full bg-coffee text-white text-lg py-4 rounded-lg font-semibold transition-opacity duration-300 ${selectedMethod === 'debit' && rawDebitInfo.length !== 16 ? 'opacity-50 cursor-not-allowed' : ''} ${selectedMethod === 'cash' && (cashReceived === null || cashReceived <= totalPrice) ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={onCreateTransaction}
-              disabled={selectedMethod === 'debit' && rawDebitInfo.length !== 16}
+              disabled={
+                (selectedMethod === 'debit' && rawDebitInfo.length !== 16) ||
+                (selectedMethod === 'cash' && (cashReceived === null || cashReceived <= totalPrice))
+              }
             >
               Proceed
             </button>

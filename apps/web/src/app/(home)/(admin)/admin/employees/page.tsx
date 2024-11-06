@@ -1,6 +1,6 @@
 import { boong } from '@/libs/fonts';
-import EmployeeList from './_components/employeelist';
-import CreateEmployee from './_components/createemployee';
+import EmployeeList from './_components/EmployeeList';
+import CreateEmployee from './_components/CreateEmployee';
 
 export default function Employees() {
   return (

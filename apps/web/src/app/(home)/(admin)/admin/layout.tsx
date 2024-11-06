@@ -1,4 +1,4 @@
-import SideBarAdmin from './_components/sidebaradmin';
+import SideBarAdmin from './_components/SideBarAdmin';
 
 export default function DashboardLayout({
   children,
