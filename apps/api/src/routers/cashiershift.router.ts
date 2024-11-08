@@ -16,6 +16,8 @@ export class CashierShiftRouter {
     }
 
     private initialization(): void {
+        this.router.get('/', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.cashierShiftController.getShiftData)
+        this.router.get('/details', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.cashierShiftController.getDataEachShift)
         this.router.post('/', this.authMiddleware.verifyToken, this.cashierShiftController.createShiftData)
     }
 

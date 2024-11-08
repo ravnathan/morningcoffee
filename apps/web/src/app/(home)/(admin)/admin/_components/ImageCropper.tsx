@@ -71,7 +71,7 @@ export default function ImageCropper({ closeModal, picture }:ImageCropperProps) 
           type="file"
           accept="image/*"
           onChange={onSelectFile}
-          className="block w-full text-sm text-main-black file:mr-4 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-sm file:bg-main file:text-secondary hover:file:bg-main-black hover:file:cursor-pointer"
+          className="block w-full text-sm text-black file:mr-4 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-sm file:bg-superlightbrown file:text-black hover:file:bg-coffee hover:file:text-white hover:file:cursor-pointer"
         />
       </label>
       {error && <p className="text-red-400 text-xs">{error}</p>}
@@ -80,7 +80,6 @@ export default function ImageCropper({ closeModal, picture }:ImageCropperProps) 
           <ReactCrop
             crop={crop}
             onChange={(pixelCrop: PixelCrop, percentCrop: Crop) => setCrop(percentCrop)}
-            circularCrop
             keepSelection
             aspect={ASPECT_RATIO}
             minWidth={MIN_DIMENSION}

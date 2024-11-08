@@ -35,3 +35,42 @@ interface Transaction {
 export interface TransactionResponse {
   transactions: Transaction[];
 }
+
+export interface ShiftData {
+  startShiftTime: string;       
+  endShiftTime: string;        
+  startShiftValue: string;      
+  endShiftValue: string;        
+  shiftValueDifference: string; 
+  totalCash: string;            
+  totalDebit: string;           
+  totalIncome: string;         
+  match: boolean;              
+}
+
+export interface CashierShiftData {
+  [cashierName: string]: ShiftData[]; 
+}
+
+interface SoldItem {
+  name: string;
+  variant: string;
+  qty: number;
+  totalPrice: number;
+}
+
+interface PaymentDetails {
+  count: number;
+  amount: number;
+}
+
+interface TransactionData {
+  date: string;
+  totalTransactions: number;
+  totalAmount: number;
+  cash: PaymentDetails;
+  debit: PaymentDetails;
+  soldItems: SoldItem[];
+}
+
+export type TransactionDialy = TransactionData[];

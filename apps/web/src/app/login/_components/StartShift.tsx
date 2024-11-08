@@ -16,6 +16,10 @@ export default function StartShift() {
   const onStartShift = async (data: shiftInterface) => {
     try {
       const res = await cashierShift(data);
+      if (!res.ok) {
+        toast.error(res.msg)
+        return
+      }
       toast.success(res.msg);
       navigate('/');
     } catch (error) {

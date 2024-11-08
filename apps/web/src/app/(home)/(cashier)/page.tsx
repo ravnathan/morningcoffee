@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ProductFetch } from '@/types/product';
-import { getProduct } from '@/libs/action/products';
+import { getProdByCategory, getProduct } from '@/libs/action/products';
 import LoadingScreen from '@/components/loadingcomp';
 import Order from './_components/Order';
 import SearchBar from './_components/SearchBar';
@@ -11,6 +11,8 @@ import ProductCardTemplate from './_components/ProductTemplate';
 import { FaSignOutAlt } from 'react-icons/fa';
 import ShiftModal from './_components/ShiftModal';
 import EndShift from './_components/EndShift';
+import { getCookie } from '@/libs/action/server';
+// import { useUserStore } from '@/zustand/UserStore';
 
 export interface OrderItem {
   id: string;
@@ -28,17 +30,35 @@ export default function Home() {
   const [data, setData] = useState<ProductFetch | null>(null);
   const [loading, setLoading] = useState(true);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [enable, setEnable] = useState();
+
+  const fetchRole = async () => {
+    const cookie = await getCookie('token');
+    let payload = JSON.parse(atob(cookie!.split('.')[1]));
+    setEnable(payload.role);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await getProduct();
-      setData(res);
-      setLoading(false);
-    };
-    fetchData();
+    fetchRole();
   }, []);
+
+  const fetchProducts = async (categoryName: string | null) => {
+    setLoading(true);
+    if (categoryName && categoryName !== 'All') {
+      const categoryData = await getProdByCategory(categoryName);
+      setData(categoryData);
+    } else {
+      const allProducts = await getProduct();
+      setData(allProducts);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
 
   const addToOrder = (item: OrderItem) => {
     setOrderItems((prevItems) => {
@@ -71,18 +91,24 @@ export default function Home() {
   if (!data) {
     return <div>No data found.</div>;
   }
+
   return (
     <div>
       <Order items={orderItems} removeFromOrder={removeFromOrder} clearOrderItems={clearOrderItems} />
-      <button className="absolute w-14 h-14 right-3 z-40 top-6"
-      onClick={() => setModalOpen(true)}>
-        <div className="text-lg">
+      {enable === 'cashier' ? (
+        <button
+          className="fixed w-24 h-8 pl-4 right-3 z-20 top-5 bg-coffee rounded-full flex items-center gap-2 text-white"
+          onClick={() => setModalOpen(true)}
+        >
+          <p className="text-sm">Logout</p>
           <FaSignOutAlt />
-        </div>
-      </button>
+        </button>
+      ) : (
+        ''
+      )}
       <div className="mr-[400px]">
         <SearchBar />
-        <Category />
+        <Category setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
         <div className="pt-10 mx-10 flex flex-wrap gap-7">
           {data.products.map((product, index) => (
             <ProductCardTemplate
@@ -105,9 +131,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      {modalOpen && (
-        <ShiftModal children={<EndShift/>} closeModal={() => setModalOpen(false)}/>
-      )}
+      {modalOpen && <ShiftModal children={<EndShift closeModal={() => setModalOpen(false)} />} closeModal={() => setModalOpen(false)} />}
     </div>
   );
 }

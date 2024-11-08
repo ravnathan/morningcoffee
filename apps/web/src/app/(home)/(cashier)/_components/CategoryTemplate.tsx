@@ -1,14 +1,15 @@
-"use client"
+'use client';
 
-import Image from 'next/image'
-import { motion } from 'framer-motion'
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface CategoryList {
-  category_url: string
-  category_name: string
+  category_url: string;
+  category_name: string;
+  isActive: boolean;
 }
 
-export default function CategoryTemplate({ category_url, category_name }: CategoryList) {
+export default function CategoryTemplate({ category_url, category_name, isActive }: CategoryList) {
   return (
     <div className="flex flex-col items-center">
       <motion.div
@@ -28,10 +29,12 @@ export default function CategoryTemplate({ category_url, category_name }: Catego
           style={{ objectFit: 'cover' }}
           className="transition-transform duration-300 hover:scale-110 bg-white"
         />
-        <div className="absolute bottom-0 w-full bg-white bg-opacity-80 text-center py-1">
-          <p className="text-sm font-semibold text-gray-800">{category_name}</p>
+        <div
+          className={`absolute bottom-0 w-full text-center py-1 ${isActive ? 'bg-coffee text-white' : 'bg-white bg-opacity-80 text-gray-800'}`}
+        >
+          <p className="text-sm font-semibold">{category_name}</p>
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

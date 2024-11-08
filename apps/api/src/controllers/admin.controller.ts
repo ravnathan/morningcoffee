@@ -1,6 +1,7 @@
 import { hashData } from '@/helpers/hashData';
 import { responseError } from '@/helpers/responseError';
 import prisma from '@/prisma';
+import { compare } from 'bcrypt';
 import { Request, Response } from 'express';
 
 const base_url = process.env.BASE_URL;
@@ -62,20 +63,36 @@ export class AdminController {
 
   async editCashier(req: Request, res: Response) {
     try {
-      const { password, ...data } = req.body;
+      const { password, avatar, fullname, ...data } = req.body;
       const cashierData = await prisma.user.findUnique({
-        where: { username: data.username },
+        where: { username: req.params.username },
       });
 
-      if (!cashierData) throw 'No user found';
+      if (!cashierData) {
+        res.status(400).send({
+          ok: false,
+          msg: 'No user found',
+        });
+      }
+
       const updateData: any = { ...data };
+
+      if (fullname) {
+        updateData.fullname = req.body.fullname
+      }
+
       if (password) {
         const hashedPassword = await hashData(password);
         updateData.password = hashedPassword;
       }
 
+      if (req.file) {
+        const newAvatar = `${base_url}/public/avatar/${req.file.filename}`;
+        updateData.avatar = newAvatar;
+      }
+
       const newData = await prisma.user.update({
-        where: { username: cashierData.username },
+        where: { username: cashierData!.username },
         data: updateData,
       });
 

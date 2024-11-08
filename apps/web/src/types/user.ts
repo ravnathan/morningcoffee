@@ -40,3 +40,17 @@ export interface CashierStatus {
     avatar: string
   }
 }
+
+
+export interface CashierFullname {
+  fullname: string
+}
+
+export interface CashierPassword {
+  password: string
+}
+
+export interface CashierAvatar {
+  avatar: File
+}
+

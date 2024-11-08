@@ -26,3 +26,17 @@ export const createCategory = async (data: CategoryForm) => {
 
   return res.json();
 };
+
+export const deleteCategory = async (id: string) => {
+  const token = Cookies.get('token');
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}category/soft`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'PATCH',
+    body: JSON.stringify({ id }),
+  });
+
+  return res.json();
+};

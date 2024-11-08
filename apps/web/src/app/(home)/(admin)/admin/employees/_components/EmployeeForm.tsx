@@ -1,17 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik';;
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { createCashier } from '@/libs/action/user';
 import { CashierData } from '@/types/user';
 import { toast } from 'react-toastify';
 import { createCashierSchema } from '@/libs/schema';
 import PictureModal from '../../_components/PictureModal';
+import { createCashier } from '@/libs/action/admin';
 
 export default function EmployeeForm({ closeModal }: { closeModal: () => void }) {
   const [openModal, setOpenModal] = useState(false);

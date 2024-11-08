@@ -32,7 +32,6 @@ export default function LoginForm({ setOpenModal } : LoginFormProps) {
           setOpenModal(true);
         }
       }
-
       if (decodedToken.role === 'admin') {
         toast.success(result.msg);
         navigate('/admin')

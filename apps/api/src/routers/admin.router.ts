@@ -22,7 +22,7 @@ export class AdminRouter {
         this.router.get('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.getAllCashier)
         this.router.get('/cashier/shiftdata', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.cashierShiftController.getShiftData)
         this.router.post('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, uploader('avatar', '/avatar').single('avatar'), this.adminController.createCashier)
-        this.router.patch('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.editCashier)
+        this.router.patch('/cashier/:username', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin,uploader('avatar', '/avatar').single('avatar'), this.adminController.editCashier)
         this.router.delete('/cashier', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.adminController.deleteCashier)
     }
 

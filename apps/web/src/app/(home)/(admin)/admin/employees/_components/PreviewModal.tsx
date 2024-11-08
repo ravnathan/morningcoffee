@@ -1,13 +1,31 @@
 import Image from 'next/image';
-import React from 'react';
 import CloseIcon from '../../_components/CloseIcon';
+import { useState } from 'react';
+import PictureModal from '../../_components/PictureModal';
+import { editCashierAvatar } from '@/libs/action/admin';
+import { toast } from 'react-toastify';
+import { navigate } from '@/libs/action/server';
 
 interface ModalProps {
-  children: React.ReactNode;
+  username: string;
+  avatar: string;
   closeModal: () => void;
 }
 
-export default function PreviewModal({ closeModal, children }: ModalProps) {
+export default function PreviewModal({ username, avatar, closeModal }: ModalProps) {
+  const [openModal, setOpenModal] = useState(false);
+  const [dataUrl, setDataUrl] = useState<string | null>(null)
+
+  const onSubmit = async () => {
+    try {
+      const res = await editCashierAvatar(username, dataUrl!)
+      toast.success(res.msg)
+      navigate('/admin/employees')
+    } catch (error) {
+      toast.error("Can't change data")
+    }
+  }
+
   return (
     <div
       className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"
@@ -25,11 +43,26 @@ export default function PreviewModal({ closeModal, children }: ModalProps) {
             <span className="sr-only">Close menu</span>
             <CloseIcon />
           </button>
-          <div className="p-4">
-            <Image src={`${children}`} width={300} height={300} alt="" />
+          <div className="p-4 text-center">
+            {avatar ? <Image src={avatar} alt={`${username}'s portrait`} width={300} height={300} /> : <p>No portrait available</p>}
+          </div>
+          <div className="flex items-center justify-center">
+            <button className="bg-coffee py-2 px-12 rounded-full text-white font-semibold text-lg" onClick={() => setOpenModal(true)}>
+              Edit
+            </button>
           </div>
         </div>
       </div>
+      {openModal && (
+        <PictureModal
+          func={(imageDataUrl: string) => {
+            setDataUrl(imageDataUrl);
+            setOpenModal(false);
+            onSubmit()
+          }}
+          closeModal={() => setOpenModal(false)}
+        />
+      )}
     </div>
   );
 }

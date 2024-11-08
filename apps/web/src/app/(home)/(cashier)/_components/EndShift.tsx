@@ -7,7 +7,11 @@ import { shiftInterface } from '@/types/user';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
 
-export default function EndShift() {
+interface EndShiftProps {
+  closeModal: () => void;
+}
+
+export default function EndShift({ closeModal }: EndShiftProps) {
   const initialValues: shiftInterface = {
     shift: 'end',
     value: parseInt(''),
@@ -16,9 +20,12 @@ export default function EndShift() {
   const onEndShift = async (data: shiftInterface) => {
     try {
       const res = await cashierShift(data);
-        toast.success(res.msg);
+      if (!res.ok) {
+        toast.error(res.msg);
+        return;
+      }
       onLogout();
-    //   navigate('/login');
+      navigate('/login');
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +53,10 @@ export default function EndShift() {
                   >
                     Submit
                   </button>
-                  <button className="w-full bg-lightbrown text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                  <button
+                    className="w-full bg-lightbrown text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+                    onClick={closeModal}
+                  >
                     Cancel
                   </button>
                 </div>

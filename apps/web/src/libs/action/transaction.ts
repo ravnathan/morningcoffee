@@ -49,3 +49,42 @@ export const getTransactionDataByDate = async (date: string) => {
 
   return res.json()
 };
+
+export const getTransactionDataByProd = async (product: string) => {
+  const token = Cookies.get('token')
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}transaction/by-product?product=${product}`, {
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    method: 'GET'
+  })
+
+  return res.json()
+}
+
+export const getTransactionDatabyDay = async () => {
+  const token = Cookies.get('token');
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}transaction/details`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'GET',
+  });
+
+  return res.json();
+};
+
+export const getCashierShiftDetails = async () => {
+  const token = Cookies.get('token')
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}shift/details`, {
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    method: 'GET'
+  })
+
+  return res.json()
+}

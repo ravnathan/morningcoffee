@@ -9,7 +9,7 @@ interface ModalProps {
 export default function ShiftModal({ closeModal, children }: ModalProps) {
   return (
     <div
-      className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"
+      className="fixed inset-0 z-40 flex h-screen items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="crop-image-dialog"

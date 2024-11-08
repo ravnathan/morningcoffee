@@ -17,6 +17,7 @@ export class ProductRouter {
 
   private initialization(): void {
     this.router.get('/', this.productController.getAllProducts);
+    this.router.get('/by-category', this.productController.getProductsByCategory);
     this.router.post(
       '/',
       this.authMiddleware.verifyToken,

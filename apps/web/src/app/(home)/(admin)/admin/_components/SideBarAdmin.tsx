@@ -25,15 +25,17 @@ export default function SideBarAdmin() {
       className="h-full w-64 bg-white shadow-lg fixed top-0 left-0 flex flex-col p-6"
     >
       <div className="flex items-center justify-center py-6">
-        <Image src={'/images/logo/logo.png'} width={100} height={100} alt="Logo" />
+        <Link href={'/'}>
+          <Image src={'/images/logo/logo.png'} width={100} height={100} alt="Logo" />
+        </Link>
       </div>
       <div className="flex flex-col space-y-48">
         <div className="flex flex-col space-y-8 mt-8">
-          <Link href="/admin/history">
+          <Link href="/admin/">
             <div
               onClick={() => handleItemClick('/report/transaction-history')}
               className={`flex items-center space-x-4 p-3 rounded-md transition-colors duration-300 cursor-pointer ${
-                activePage === '/report/transaction-history' ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
+                activePage === '/admin' ? 'bg-coffee text-white' : 'hover:bg-coffee hover:text-white'
               }`}
             >
               <div className="p-3">

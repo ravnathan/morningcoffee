@@ -1,27 +1,26 @@
 'use client';
 
-import { deleteCashierData, getCashier } from '@/libs/action/user';
 import { CashierList } from '@/types/user';
 import { useEffect, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/confirmationmodal';
+import { deleteCashierData, getCashier } from '@/libs/action/admin';
+import EmployeeModal from './EmployeeModal';
+import EditFullname from './editingdata/EditFullname';
+import PreviewModal from './PreviewModal';
 
 export default function EmployeeList() {
   const [data, setData] = useState<CashierList | null>(null);
   const [deleteCashier, setDeleteCashier] = useState<string | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const [editCashier, setEditCashier] = useState<string>('');
+  const [editFullname, seteditFullname] = useState<string>('');
+  const [editAvatar, setEditAvatar] = useState<string>('');
+  const [openModal, setOpenModal] = useState(false);
+  const [previewModal, setPreviewModal] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -39,6 +38,17 @@ export default function EmployeeList() {
   const handleDelete = (cashierId: string) => {
     setDeleteCashier(cashierId);
     setDeleteConfirmation(true);
+  };
+
+  const handleEdit = (cashieruser: string) => {
+    seteditFullname(cashieruser);
+    setOpenModal(true);
+  };
+
+  const handlePreview = (cashierAvatar: string, cashierUser: string) => {
+    setEditCashier(cashierUser);
+    setEditAvatar(cashierAvatar);
+    setPreviewModal(true);
   };
 
   const confirmDelete = async () => {
@@ -75,19 +85,25 @@ export default function EmployeeList() {
             <TableRow key={cashier.id}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{cashier.username}</TableCell>
-              <TableCell>{cashier.fullname}</TableCell>
+              <TableCell>
+                <button
+                  onClick={() => handleEdit(cashier.username)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'inherit',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  {cashier.fullname}
+                </button>
+              </TableCell>
               <TableCell>{cashier.role}</TableCell>
               <TableCell>
-                {cashier.avatar ? (
-                  <Image
-                    src={cashier.avatar}
-                    alt={`${cashier.fullname}'s portrait`}
-                    width={50}
-                    height={50}
-                  />
-                ) : (
-                  '-'
-                )}
+                <button onClick={() => handlePreview(cashier.avatar, cashier.username)}>
+                  {cashier.avatar ? <Image src={cashier.avatar} alt={`${cashier.fullname}'s portrait`} width={50} height={50} /> : '-'}
+                </button>
               </TableCell>
               <TableCell>
                 <IconButton onClick={() => handleDelete(cashier.id)}>
@@ -107,6 +123,13 @@ export default function EmployeeList() {
           message="Are you sure you want to delete this user?"
         />
       )}
+      {openModal && (
+        <EmployeeModal
+          closeModal={() => setOpenModal(false)}
+          children={<EditFullname editFullname={editFullname} setOpenModal={() => setOpenModal(false)} />}
+        />
+      )}
+      {previewModal && <PreviewModal username={editCashier} avatar={editAvatar} closeModal={() => setPreviewModal(false)} />}
     </TableContainer>
   );
 }

@@ -7,6 +7,7 @@ import { createCategory } from '@/libs/action/category';
 import { toast } from 'react-toastify';
 import { dataURLtoFile } from '@/libs/urltofileconvert';
 import PictureModal from '../../_components/PictureModal';
+import { navigate } from '@/libs/action/server';
 
 export default function CreateCategory({ closeModal }: { closeModal: () => void }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -66,6 +67,7 @@ export default function CreateCategory({ closeModal }: { closeModal: () => void 
       setUrl(null);
       setPreviewImage(null);
       closeModal();
+      navigate('/admin/products/category')
     } catch (error) {
       toast.error('Failed creating category');
     }

@@ -27,6 +27,37 @@ export class ProductController {
     }
   }
 
+  async getProductsByCategory(req: Request, res: Response) {
+    try {
+      const { categoryName } = req.query;
+  
+      if (!categoryName) throw ('Category name is required')
+        
+      const products = await prisma.product.findMany({
+        where: {
+          is_deleted: false,
+          category: {
+            name: categoryName as string,
+          },
+        },
+        include: {
+          category: {
+            select: {
+              hot_iced_variant: true,
+              cold_only: true,
+            },
+          },
+        },
+      });
+  
+      return res.status(200).send({
+        products,
+      });
+    } catch (error) {
+      responseError(res, error);
+    }
+  }
+  
   async createProduct(req: Request, res: Response) {
     try {
       const { category_name, ...productData } = req.body;

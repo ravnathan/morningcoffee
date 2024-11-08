@@ -43,6 +43,20 @@ export const getProduct = async () => {
   return res.json();
 };
 
+export const getProdByCategory = async (categoryName: string) => {
+  const token = Cookies.get('token')
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}product/by-category?categoryName=${categoryName}`, {
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    method: 'GET'
+  })
+
+  return res.json()
+}
+
+
 export const deleteProduct = async (id: string) => {
   const token = Cookies.get('token');
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}product/soft`, {
