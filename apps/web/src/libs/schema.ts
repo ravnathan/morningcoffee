@@ -59,3 +59,4 @@ export const fullNameSchema = Yup.object({
   .min(6, 'Full name must be at least 6 characters')
   .required('Full name is required'),
 })
+

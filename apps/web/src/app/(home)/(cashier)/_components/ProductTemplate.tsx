@@ -65,9 +65,7 @@ export default function ProductCardTemplate({
       }
     }
   };
-
-  // console.log(size);
-
+  
   const getDescription = () => (type === 'hot' ? description : description_iced);
 
   return (

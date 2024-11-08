@@ -8,12 +8,12 @@ import ToolBar from './_components/ToolBar';
 
 export default function Products() {
   return (
-    <div className="p-10">
+    <div className="p-10 w-full">
       <div className="flex justify-between border-b-2 border-coffee">
         <h1 className={`text-7xl ${boong.className} text-coffee pb-10`}>Products</h1>
         <CreateProductCat />
       </div>
-      <div className="pt-10 flex items-center justify-center w-full">
+      <div className="pt-10 flex items-center justify-center">
         <ToolBar />
         <AppWrapper>
           <ProductList />

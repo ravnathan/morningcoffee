@@ -28,14 +28,17 @@ export class ProductRouter {
       ]),
       this.productController.createProduct,
     );
+    this.router.patch('/soft', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.productController.deleteProduct);
     this.router.patch(
-      '/',
+      '/:id',
       this.authMiddleware.verifyToken,
       this.authMiddleware.checkAdmin,
-      uploader('product', '/products').single('product'),
+      uploader('product', '/products').fields([
+        { name: 'image_1', maxCount: 1 },
+        { name: 'image_2', maxCount: 1 },
+      ]),
       this.productController.editProduct,
     );
-    this.router.patch('/soft', this.authMiddleware.verifyToken, this.authMiddleware.checkAdmin, this.productController.deleteProduct);
   }
 
   getRouter(): Router {

@@ -1,17 +1,21 @@
 import { getTransactionData, getTransactionDataByDate } from '@/libs/action/transaction';
 import { TransactionResponse } from '@/types/transaction';
 import { useEffect, useState } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField} from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import { formatToRupiah } from '@/libs/formatrupiah';
 import { format } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function AdminHistory() {
   const [data, setData] = useState<TransactionResponse | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchData = async () => {
     try {
@@ -32,9 +36,24 @@ export default function AdminHistory() {
     fetchData();
   }, [selectedDate]);
 
+  useEffect(() => {
+    const dateFromURL = searchParams.get('date');
+    const searchFromURL = searchParams.get('search') || '';
+
+    if (dateFromURL) setSelectedDate(new Date(dateFromURL));
+    setSearchQuery(searchFromURL);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedDate) params.set('date', format(selectedDate, 'yyyy-MM-dd'));
+    if (searchQuery) params.set('search', searchQuery);
+    router.replace(`?${params.toString()}`);
+  }, [selectedDate, searchQuery, router]);
+
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    setShowCalendar(false)
+    setShowCalendar(false);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,13 +64,23 @@ export default function AdminHistory() {
     transaction.transaction_items.some((item) => item.product_name.toLowerCase().includes(searchQuery.toLowerCase())),
   );
 
+  const resetFilters = () => {
+    setSelectedDate(null);
+    setSearchQuery('');
+  };
+
   return (
     <div>
       <div className="pb-10">
         <div className="flex justify-between items-center">
-          <Button variant="contained" onClick={() => setShowCalendar((prev) => !prev)}>
-            Filter Date
-          </Button>
+          <div>
+            <Button variant="contained" onClick={() => setShowCalendar((prev) => !prev)}>
+              Filter Date
+            </Button>
+            <Button variant="outlined" onClick={resetFilters} sx={{ marginLeft: '1rem' }}>
+              Reset Filters
+            </Button>
+          </div>
           {showCalendar && (
             <div className="absolute z-40 top-[169px] left-96">
               <DatePicker selected={selectedDate} onChange={handleDateChange} inline dateFormat="yyyy-MM-dd" />

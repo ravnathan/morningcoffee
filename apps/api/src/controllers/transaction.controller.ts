@@ -7,21 +7,20 @@ import { parseISO, startOfDay, endOfDay } from 'date-fns';
 export class TransactionController {
   async createTransaction(req: Request, res: Response) {
     const { items, debit_info } = req.body;
-
+  
     try {
       let totalPrice = 0;
-
       const transactionItemsData = await Promise.all(
         items.map(async (item: { product_id: string; qty: number; variant: string }) => {
           const product = await prisma.product.findUnique({
             where: { id: item.product_id },
           });
           console.log(product);
-
+  
           if (!product) {
             throw new Error(`Product with ID ${item.product_id} not found`);
           }
-
+  
           const price =
             item.variant === 'S'
               ? product.iced_small
@@ -30,10 +29,32 @@ export class TransactionController {
                 : item.variant === 'L'
                   ? product.iced_large
                   : product.medium;
-
+  
           const itemTotalPrice = price! * item.qty;
           totalPrice += itemTotalPrice;
-
+  
+          if (item.variant === 'S' || item.variant === 'M' || item.variant === 'L') {
+            if (product.stock_iced === null || product.stock_iced < item.qty) {
+              throw new Error(`Not enough stock for iced variant of product with ID ${item.product_id}`);
+            }
+            await prisma.product.update({
+              where: { id: item.product_id },
+              data: {
+                stock_iced: product.stock_iced - item.qty,
+              },
+            });
+          } else {
+            if (product.stock === null || product.stock < item.qty) {
+              throw new Error(`Not enough stock for product with ID ${item.product_id}`);
+            }
+            await prisma.product.update({
+              where: { id: item.product_id },
+              data: {
+                stock: product.stock - item.qty,
+              },
+            });
+          }
+  
           return {
             product: {
               connect: { id: item.product_id },
@@ -45,7 +66,7 @@ export class TransactionController {
           };
         }),
       );
-
+  
       const transaction = await prisma.transaction.create({
         data: {
           cashier_on_duty: req.user.id,
@@ -64,7 +85,7 @@ export class TransactionController {
           },
         },
       });
-
+  
       res.status(201).send({
         status: 'ok',
         msg: 'Transaction Success',
@@ -74,6 +95,7 @@ export class TransactionController {
       responseError(res, error);
     }
   }
+  
 
   async getAllTransactions(req: Request, res: Response) {
     try {

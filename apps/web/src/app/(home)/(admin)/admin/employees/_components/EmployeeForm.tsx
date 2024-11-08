@@ -28,6 +28,7 @@ export default function EmployeeForm({ closeModal }: { closeModal: () => void })
       toast.success(res.msg);
       setPreviewImage(null);
       closeModal();
+      window.location.reload()
     } catch (error) {
       toast.error(error as string);
     }

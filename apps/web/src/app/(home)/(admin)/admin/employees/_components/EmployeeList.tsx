@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/confirmationmodal';
 import { deleteCashierData, getCashier } from '@/libs/action/admin';
-import EmployeeModal from './EmployeeModal';
+import EmployeeModal from './editingdata/EmployeeModal';
 import EditFullname from './editingdata/EditFullname';
 import PreviewModal from './PreviewModal';
 

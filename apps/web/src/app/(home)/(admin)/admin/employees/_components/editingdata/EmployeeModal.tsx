@@ -1,5 +1,5 @@
 import React from 'react';
-import CloseIcon from '../../_components/CloseIcon';
+import CloseIcon from '../../../_components/CloseIcon';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export default function EmployeeModal({ closeModal, children }: ModalProps) {
             <span className="sr-only">Close menu</span>
             <CloseIcon />
           </button>
-          <h2 className='text-center text-lg font-bold'>Edit Data</h2>
+          <h2 className="text-center text-lg font-bold">Edit Data</h2>
           <div className="flex justify-center items-center w-full h-full pt-20">{children}</div>
         </div>
       </div>

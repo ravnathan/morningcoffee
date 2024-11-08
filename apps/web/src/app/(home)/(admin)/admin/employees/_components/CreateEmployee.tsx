@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import EmployeeModal from './EmployeeModal';
+import EmployeeModal from './editingdata/EmployeeModal';
 import AppWrapper from '../../products/_components/ProductWrapper';
 import EmployeeForm from './EmployeeForm';
+import CreateEmployeeModal from './CreateEmployeeModal';
 
 export default function CreateEmployee() {
   const [employeeModal, setEmployeeModal] = useState(false);
@@ -19,7 +20,7 @@ export default function CreateEmployee() {
         </button>
       </div>
       {employeeModal && (
-        <EmployeeModal
+        <CreateEmployeeModal
           children={
             <AppWrapper>
               <EmployeeForm closeModal={() => setEmployeeModal(false)} />

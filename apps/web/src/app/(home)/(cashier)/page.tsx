@@ -5,14 +5,15 @@ import { ProductFetch } from '@/types/product';
 import { getProdByCategory, getProduct } from '@/libs/action/products';
 import LoadingScreen from '@/components/loadingcomp';
 import Order from './_components/Order';
-import SearchBar from './_components/SearchBar';
 import Category from './_components/Category';
 import ProductCardTemplate from './_components/ProductTemplate';
 import { FaSignOutAlt } from 'react-icons/fa';
 import ShiftModal from './_components/ShiftModal';
 import EndShift from './_components/EndShift';
 import { getCookie } from '@/libs/action/server';
-// import { useUserStore } from '@/zustand/UserStore';
+import { boong } from '@/libs/fonts';
+import { TextField } from '@mui/material';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export interface OrderItem {
   id: string;
@@ -33,6 +34,10 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [enable, setEnable] = useState();
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchRole = async () => {
     const cookie = await getCookie('token');
@@ -62,7 +67,9 @@ export default function Home() {
 
   const addToOrder = (item: OrderItem) => {
     setOrderItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex((orderItem) => orderItem.name === item.name && orderItem.price === item.price);
+      const existingItemIndex = prevItems.findIndex(
+        (orderItem) => orderItem.name === item.name && orderItem.price === item.price
+      );
 
       if (existingItemIndex !== -1) {
         const updatedItems = [...prevItems];
@@ -83,6 +90,30 @@ export default function Home() {
   const clearOrderItems = () => {
     setOrderItems([]);
   };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProducts = data?.products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  useEffect(() => {
+
+    const categoryFromURL = searchParams.get('category');
+    const searchFromURL = searchParams.get('search') || '';
+
+    if (categoryFromURL) setSelectedCategory(categoryFromURL);
+    setSearchQuery(searchFromURL);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (searchQuery) params.set('search', searchQuery);
+    router.replace(`?${params.toString()}`);
+  }, [selectedCategory, searchQuery, router]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -107,10 +138,27 @@ export default function Home() {
         ''
       )}
       <div className="mr-[400px]">
-        <SearchBar />
+        <div className='flex justify-between p-10'>
+          <h1 className={`text-7xl text-coffee ${boong.className}`}>Choose Category</h1>
+          <div className="w-96">
+            <TextField
+              label="Search Products"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{
+                marginBottom: '1rem',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '9999px',
+                },
+              }}
+            />
+          </div>
+        </div>
         <Category setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
         <div className="pt-10 mx-10 flex flex-wrap gap-7">
-          {data.products.map((product, index) => (
+          {filteredProducts?.map((product, index) => (
             <ProductCardTemplate
               key={index}
               prodID={product.id}

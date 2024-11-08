@@ -15,6 +15,23 @@ export interface ProductData {
   description_iced?: string;
 }
 
+export interface EditProductData {
+  name?: string;
+  category_name?: string;
+  size?: string;
+  type?: string;
+  medium?: number;
+  iced_small?: number;
+  iced_medium?: number;
+  iced_large?: number;
+  image_cold?: File;
+  image_1?: File;
+  stock?: number;
+  stock_iced?: number;
+  description?: string;
+  description_iced?: string;
+}
+
 export interface ProductFetch {
   products: Array<{
     id: string;

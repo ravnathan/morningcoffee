@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
   Select,
   SelectChangeEvent,
   MenuItem,
@@ -23,9 +22,12 @@ import { getCategories } from '@/libs/action/home';
 import { CategoryProductForm } from '@/types/category';
 import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/confirmationmodal';
 import { formatToRupiah } from '@/libs/formatrupiah';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ProductList() {
   const [products, setProducts] = useState<ProductTable | null>(null);
@@ -34,6 +36,9 @@ export default function ProductList() {
   const [deleteProd, setDeleteProd] = useState<string | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchProducts = async () => {
     try {
@@ -58,6 +63,21 @@ export default function ProductList() {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    const categoryFromURL = searchParams.get('category') || 'All';
+    const searchFromURL = searchParams.get('search') || '';
+
+    setSelectedCategory(categoryFromURL);
+    setSearchQuery(searchFromURL);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory !== 'All') params.set('category', selectedCategory);
+    if (searchQuery) params.set('search', searchQuery);
+    router.replace(`?${params.toString()}`);
+  }, [selectedCategory, searchQuery, router]);
+
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     setSelectedCategory(event.target.value as string);
   };
@@ -76,7 +96,7 @@ export default function ProductList() {
       try {
         const res = await deleteProduct(deleteProd);
         await fetchProducts();
-        toast.success('Data has been deleted');
+        toast.success(res.msg);
       } catch (error) {
         toast.error('Failed deleting data');
       } finally {
@@ -182,7 +202,14 @@ export default function ProductList() {
                     {product.image_2 ? <Image src={product.image_2} alt={`${product.name} iced`} width={50} height={50} /> : '-'}
                   </TableCell>
                   <TableCell sx={{ border: '1px solid #e0e0e0', textAlign: 'center' }}>
-                    <DeleteIcon sx={{ cursor: 'pointer', color: 'red' }} onClick={() => handleDelete(product.id)} />
+                    <div className="flex">
+                      <Link href={`/admin/products/edit/${product.id}`}>
+                        <EditIcon
+                          sx={{ cursor: 'pointer', color: 'blue'}}
+                        />
+                      </Link>
+                      <DeleteIcon sx={{ cursor: 'pointer', color: 'red' }} onClick={() => handleDelete(product.id)} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

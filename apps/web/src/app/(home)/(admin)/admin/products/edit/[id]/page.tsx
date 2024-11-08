@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ProductData } from '@/types/product';
 import { getCategories } from '@/libs/action/home';
 import { CategoryProductForm } from '@/types/category';
-import { createProduct } from '@/libs/action/products';
 import { toast } from 'react-toastify';
 import {
   Box,
@@ -23,8 +21,10 @@ import {
 import { dataURLtoFile } from '@/libs/urltofileconvert';
 import { navigate } from '@/libs/action/server';
 import PictureModal from '../../../_components/PictureModal';
+import { EditProductData } from '@/types/product';
+import { editProduct } from '@/libs/action/products';
 
-export default function ProductForm() {
+export default function EditProductForm({ params }: { params: { id: string } }) {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [stock, setStock] = useState<number>(0);
@@ -97,7 +97,7 @@ export default function ProductForm() {
 
   const selectedCategoryData = categories.find((cat) => cat.id === selectedCategoryId);
 
-  const onCreateProduct = async () => {
+  const onEditProduct = async () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!name || !nameRegex.test(name)) {
       toast.error('Product name must only contain alphabets and spaces.');
@@ -105,12 +105,12 @@ export default function ProductForm() {
     }
 
     try {
-      const data: ProductData = {
-        name,
-        category_name: selectedCategoryName,
+      const data: EditProductData = {
+        name: name ? name : undefined,
+        category_name: selectedCategoryName ? selectedCategoryName : undefined,
         stock: stock ? Number(stock) : undefined,
-        stock_iced: stockIced,
-        description_iced: icedDescription,
+        stock_iced: stockIced ? stockIced : undefined,
+        description_iced: icedDescription ? icedDescription : undefined,
         description: description ? description : undefined,
         medium: mediumPrice ? Number(mediumPrice) : undefined,
         iced_small: prices['Small'] ? Number(prices['Small']) : undefined,
@@ -119,7 +119,7 @@ export default function ProductForm() {
         image_1: hotUrl ? dataURLtoFile(hotUrl, 'image_1.png') : undefined,
         image_cold: icedUrl ? dataURLtoFile(icedUrl, 'image_cold.png') : undefined,
       };
-      const res = await createProduct(data);
+      const res = await editProduct(params.id, data);
       toast.success(res.msg);
       setName('');
       setDescription('');
@@ -134,7 +134,7 @@ export default function ProductForm() {
 
   return (
     <Box p={4}>
-      <Typography variant="h6">Create Product</Typography>
+      <Typography variant="h6">Edit Product</Typography>
       <TextField label="Product Name" value={name} onChange={(e) => setName(e.target.value)} variant="outlined" fullWidth margin="normal" />
 
       <FormControl fullWidth margin="normal">
@@ -266,7 +266,7 @@ export default function ProductForm() {
                   ? types.includes('Iced')
                     ? 'Upload Iced Image'
                     : ''
-                  : 'Upload Image' 
+                  : 'Upload Image'
             }
           </Button>
 
@@ -355,7 +355,7 @@ export default function ProductForm() {
       <Button
         variant="contained"
         color="primary"
-        onClick={onCreateProduct}
+        onClick={onEditProduct}
         disabled={isFormDisabled}
         sx={{ width: 'auto', maxWidth: '200px', textTransform: 'none' }}
       >
